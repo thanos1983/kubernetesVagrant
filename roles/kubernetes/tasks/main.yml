@@ -19,6 +19,7 @@
       --apiserver-advertise-address="{{ node_ip }}" \
       --apiserver-cert-extra-sans="{{ node_ip }}" \
       --node-name k8s-master \
+      --cri-socket /run/containerd/containerd.sock \
       --pod-network-cidr=192.168.0.0/16
 
 - name: Create kube directory

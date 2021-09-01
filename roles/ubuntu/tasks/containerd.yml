@@ -33,12 +33,9 @@
     cmd: "containerd config default | tee {{ containerd.path }}/config.toml"
 
 - name: Configure systemd as cgroup driver
-  ansible.builtin.lineinfile:
+  ansible.builtin.replace:
     path: /etc/containerd/config.toml
-    insertafter: '[plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]'
-    line: "SystemdCgroup = true"
+    regexp: '\s+SystemdCgroup = false'
+    replace: 'SystemdCgroup = true'
   notify: containerd status
 
-- name: Configure Kubernetes kubelet
-  ansible.builtin.include_role:
-    name: kubernetes
