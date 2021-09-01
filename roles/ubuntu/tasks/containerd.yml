@@ -1,0 +1,44 @@
+---
+# tasks file for roles/ubuntu containerd
+- name: Create modules directory if it does not exist
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: "{{ item.state }}"
+    mode: "{{ item.mode }}"
+  loop: "{{ kubernetes.directories.values() | flatten }}"
+
+- name: Load the necessary modules for Containerd
+  ansible.builtin.template:
+    src: containerd.conf.j2
+    dest: "{{ kubernetes.directories.modules.path }}/containerd.conf"
+
+- name: Load kernel modules for Kubernetes
+  ansible.builtin.include_role:
+    name: kubernetes
+    tasks_from: modules
+
+- name: Extend kernel functionality for Kubernetes
+  ansible.builtin.include_role:
+    name: kubernetes
+    tasks_from: kernel
+
+- name: Create Containerd configuration directory
+  ansible.builtin.file:
+    path: "{{ containerd.path }}"
+    state: "{{ containerd.state }}"
+    mode: "{{ containerd.mode }}"
+
+- name: Configure Containerd
+  ansible.builtin.shell:
+    cmd: "containerd config default | tee {{ containerd.path }}/config.toml"
+
+- name: Configure systemd as cgroup driver
+  ansible.builtin.lineinfile:
+    path: /etc/containerd/config.toml
+    insertafter: '[plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]'
+    line: "SystemdCgroup = true"
+  notify: containerd status
+
+- name: Configure Kubernetes kubelet
+  ansible.builtin.include_role:
+    name: kubernetes

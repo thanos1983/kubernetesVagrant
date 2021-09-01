@@ -1,0 +1,23 @@
+---
+# tasks file for roles/kubernetes kubernetesMaster
+- name: Install calico pod network
+  become: false
+  ansible.builtin.shell:
+    cmd: "kubectl create -f https://docs.projectcalico.org/manifests/calico.yaml"
+
+- name: Generate join command
+  ansible.builtin.shell:
+    cmd: kubeadm token create --print-join-command
+  register: join_command
+
+- name: Copy join command to local file
+  ansible.builtin.copy:
+    content: "{{ join_command.stdout_lines[0] }}"
+    dest: "./join-command"
+  delegate_to: localhost
+
+- name: Synchronization using rsync protocol (pull)
+  ansible.posix.synchronize:
+    src: /home/vagrant/.kube
+    dest: "{{ playbook_dir }}"
+    mode: pull

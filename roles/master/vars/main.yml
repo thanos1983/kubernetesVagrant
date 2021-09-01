@@ -1,0 +1,55 @@
+---
+# vars file for roles/master
+ubuntu:
+  aptKey:
+    - {
+        url: "https://packages.cloud.google.com/apt/doc/apt-key.gpg",
+        state: "present",
+      }
+  aptRepository:
+    - {
+        repo: "deb https://apt.kubernetes.io/ kubernetes-xenial main",
+        filename: "kubernetes.list",
+        state: "present",
+      }
+  packages:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - gnupg-agent
+    - software-properties-common
+    - kubelet
+    - kubeadm
+    - kubectl
+    - containerd
+
+kubernetes:
+  directories:
+    modules:
+      path: "/etc/modules-load.d"
+      state: "directory"
+      mode: "0755"
+  modules:
+    - { name: "overlay", state: "present" }
+    - { name: "br_netfilter", state: "present" }
+  kernelParameters:
+    - {
+        sysctl_file: "/etc/sysctl.d/99-kubernetes-cri.conf",
+        name: "net.ipv4.ip_forward",
+        value: "1",
+      }
+    - {
+        sysctl_file: "/etc/sysctl.d/99-kubernetes-cri.conf",
+        name: "net.bridge.bridge-nf-call-iptables",
+        value: "1",
+      }
+    - {
+        sysctl_file: "/etc/sysctl.d/99-kubernetes-cri.conf",
+        name: "net.bridge.bridge-nf-call-ip6tables",
+        value: "1",
+      }
+
+containerd:
+  path: "/etc/containerd"
+  state: "directory"
+  mode: "0755"

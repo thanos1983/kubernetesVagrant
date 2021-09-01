@@ -1,0 +1,17 @@
+---
+# tasks file for roles/kubernetes kernel
+- name: Extend kernel functionality for Kubernetes
+  community.general.modprobe:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+  loop: "{{ kubernetes.modules }}"
+
+- name: Add kernel parameters
+  ansible.posix.sysctl:
+    sysctl_file: "{{ item.sysctl_file }}"
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    sysctl_set: yes
+    state: present
+    reload: yes
+  loop: "{{ kubernetes.kernelParameters }}"

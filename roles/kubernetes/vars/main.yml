@@ -1,2 +1,5 @@
 ---
 # vars file for roles/kubernetes
+mount:
+  - { src: "none", path: "swap", fstype: "swap", state: "present" }
+  - { src: "none", path: "none", fstype: "swap", state: "present" }

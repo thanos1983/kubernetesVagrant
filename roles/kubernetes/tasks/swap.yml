@@ -1,0 +1,21 @@
+---
+# tasks file for roles/kubernetes swap
+- name: Remove swapfile from /etc/fstab
+  ansible.posix.mount:
+    src: "{{ item.src }}"
+    path: "{{ item.path }}"
+    fstype: "{{ item.fstype }}"
+    state: "{{ item.state }}"
+  loop: "{{ mount }}"
+
+- name: Disable swap because of kubernetes
+  become: true
+  ansible.builtin.shell:
+    cmd: swapoff -a
+
+- name: Disable swap in /etc/fstab
+  become: true
+  ansible.builtin.replace:
+    path: /etc/fstab
+    regexp: '^([^#].*?\sswap\s+swap\s+.*)$'
+    replace: '# \1'
