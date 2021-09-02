@@ -348,3 +348,14 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+
+# Ignore .kube dir
+.kube/
+
+# Ingore join-command
+join-command
+
+# Ignore swap files
+*~
+*.swp
+*.swo

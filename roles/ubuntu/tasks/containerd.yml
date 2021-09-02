@@ -35,7 +35,7 @@
 - name: Configure systemd as cgroup driver
   ansible.builtin.replace:
     path: /etc/containerd/config.toml
-    regexp: '\s+SystemdCgroup = false'
-    replace: 'SystemdCgroup = true'
+    regexp: '(\s+)SystemdCgroup = false(\s+.*)?$'
+    replace: '\1SystemdCgroup = true\2'
   notify: containerd status
 
