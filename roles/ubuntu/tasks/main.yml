@@ -11,8 +11,8 @@
     name: kubernetes
     tasks_from: swap
 
-- name: Update Ubuntu packages
-  ansible.builtin.include_tasks: update.yml
+# - name: Update Ubuntu packages
+#  ansible.builtin.include_tasks: update.yml
 
 - name: Install kubernetes packages on Ubuntu
   ansible.builtin.include_tasks: installPackages.yml

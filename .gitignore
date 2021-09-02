@@ -359,3 +359,6 @@ join-command
 *~
 *.swp
 *.swo
+
+# Ignore Vagrant
+.vagrant/
