@@ -3,7 +3,7 @@ N = 2
 
 $script = <<-SCRIPT
 echo I am updating all packages...
-apt update
+apt-get update
 SCRIPT
 
 Vagrant.configure("2") do |config|
