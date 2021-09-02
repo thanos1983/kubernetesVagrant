@@ -1,2 +1,10 @@
 ---
-# tasks file for roles/client
+# tasks file for roles/client main
+- name: Ubuntu procedure
+  ansible.builtin.include_role:
+    name: ubuntu
+
+- name: Define node as Client
+  ansible.builtin.include_role:
+    name: kubernetes
+    tasks_from: kubernetesClient

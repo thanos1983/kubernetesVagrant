@@ -24,7 +24,3 @@
   ansible.builtin.include_role:
     name: kubernetes
 
-- name: Define node as Master
-  ansible.builtin.include_role:
-    name: kubernetes
-    tasks_from: kubernetesMaster

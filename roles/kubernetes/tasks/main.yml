@@ -12,27 +12,3 @@
     daemon_reload: yes
     state: restarted
 
-- name: Initialize the Kubernetes cluster using kubeadm
-  ansible.builtin.shell:
-    cmd: |
-      kubeadm init \
-      --apiserver-advertise-address="{{ node_ip }}" \
-      --apiserver-cert-extra-sans="{{ node_ip }}" \
-      --node-name k8s-master \
-      --pod-network-cidr=192.168.0.0/16
-
-- name: Create kube directory
-  ansible.builtin.file:
-    path: /home/vagrant/.kube
-    owner: vagrant
-    group: vagrant
-    recurse: yes
-
-- name: Setup kubeconfig for vagrant user
-  ansible.builtin.copy:
-    src: /etc/kubernetes/admin.conf
-    dest: /home/vagrant/.kube/config
-    remote_src: yes
-    owner: vagrant
-    group: vagrant
-    mode: "0600"
