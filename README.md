@@ -4,6 +4,7 @@
     - [Note](#note)
 - [Group Vars](#group-vars)
 - [Technologies](#technologies)
+- [Prerequisites](#prerequisites)
 - [Setup](#setup)
 - [Destroy the VMs](#destroy-the-vms)
 - [Sample of complete cluster](#sample-of-complete-cluster)
@@ -26,7 +27,25 @@ On this project we have common group vars for all roles. So all group vars shoul
 Project is created with:
 * Ansible version: 2.11.3
 * Python version: 3.9.6
-	
+* Virtualbox version: 6.1.26r145957
+* Vagrant version: 2.2.18
+
+## Prerequisites
+The user should install the following packages:
+- VirtualBox
+- Ansible
+- Vagrant
+
+Sample of how to install the packages on MacOS:
+
+```bash
+brew tap homebrew/cask
+brew install --cask virtualbox
+brew install --cask vagrant
+```
+
+To install Python3 the user should install it through the official documentation [Installing Python 3 on Mac OS X](https://docs.python-guide.org/starting/install3/osx/).
+
 ## Setup
 To run this project, prerequicites are Python3, Ansible, Virtuabox, Vagrant. Also is required to have already exchange ssh keys with all destination nodes. Alternatively the user need to add the ssh password in the bash script "deploy.sh". To run the project simply cd in the dir that you have clone it and run:
 
