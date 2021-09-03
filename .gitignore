@@ -362,3 +362,6 @@ join-command
 
 # Ignore Vagrant
 .vagrant/
+
+# Ignore joincommand
+join-command

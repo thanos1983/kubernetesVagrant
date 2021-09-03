@@ -5,4 +5,4 @@
     filename: "{{ item.filename }}"
     state: "{{ item.state }}"
     repo: "{{ item.repo }}"
-  loop: "{{ ubuntu.aptRepository }}"
+  loop: "{{ ubuntu.aptRepository[kubernetesConfigurations.socket] }}"

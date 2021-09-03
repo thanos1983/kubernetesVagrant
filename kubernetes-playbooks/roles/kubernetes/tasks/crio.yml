@@ -1,0 +1,9 @@
+---
+i# tasks file for roles/kubernetes crio
+- name: Copy CRI-O configuration files
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}/{{ item.src }}"
+  loop: "{{ crio }}"
+  notify: crio restart
+ 

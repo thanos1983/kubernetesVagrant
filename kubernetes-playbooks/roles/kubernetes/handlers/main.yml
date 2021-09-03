@@ -1,0 +1,14 @@
+---
+# handlers file for roles/kubernetes
+- name: containerd restart
+  ansible.builtin.service:
+    name: containerd
+    state: restarted
+    enabled: yes
+
+- name: crio restart
+  ansible.builtin.service:
+    name: crio
+    state: restarted
+    enabled: yes
+

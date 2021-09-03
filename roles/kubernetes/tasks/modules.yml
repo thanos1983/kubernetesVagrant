@@ -1,7 +1,0 @@
----
-# tasks file for roles/kubernetes modules
-- name: Extend kernel functionality for Kubernetes
-  community.general.modprobe:
-    name: "{{ item.name }}"
-    state: "{{ item.state }}"
-  loop: "{{ kubernetes.modules }}"

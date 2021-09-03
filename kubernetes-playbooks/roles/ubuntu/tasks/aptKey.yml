@@ -1,0 +1,15 @@
+---
+# tasks file for roles/ubuntu aptKey
+- name: Add an apt signing key(s) for CRI-O package(s)
+  ansible.builtin.apt_key:
+    url: "{{ item.url }}" 
+    state: "{{ item.state }}" 
+  loop: "{{ ubuntu.aptKey.kubernetes }}"
+
+- name: Add an apt signing key(s) for CRI-O package(s)
+  ansible.builtin.apt_key:
+    url: "{{ item.url }}"
+    state: "{{ item.state }}"
+    keyring: "{{ item.keyring }}"
+  loop: "{{ ubuntu.aptKey[kubernetesConfigurations.socket] }}"
+  when: kubernetesConfigurations.socket == "crio"

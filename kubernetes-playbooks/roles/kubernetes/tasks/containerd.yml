@@ -1,0 +1,18 @@
+---
+# tasks file for roles/kubernetes containerd
+- name: Create Containerd configuration directory
+  ansible.builtin.file:
+    path: "{{ containerd.path }}"
+    state: "{{ containerd.state }}"
+    mode: "{{ containerd.mode }}"
+ 
+- name: Configure Containerd
+  ansible.builtin.shell:
+    cmd: "containerd config default | tee {{ containerd.path }}/config.toml"
+ 
+- name: Configure systemd as cgroup driver
+  ansible.builtin.replace:
+    path: /etc/containerd/config.toml
+    regexp: '(\s+)SystemdCgroup = false(\s+.*)?$'
+    replace: '\1SystemdCgroup = true\2'
+  notify: containerd restart

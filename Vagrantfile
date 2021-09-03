@@ -4,6 +4,11 @@ N = 2
 $script = <<-SCRIPT
 echo I am updating all packages...
 apt-get update
+echo Upgrading all packages...
+echo Remove dependencies after update / upgrade...
+apt-get autoremove
+echo Remove local repositories...
+apt-get autoclean
 SCRIPT
 
 Vagrant.configure("2") do |config|
@@ -20,7 +25,7 @@ Vagrant.configure("2") do |config|
         master.vm.hostname = "k8s-master"
         master.vm.provision "shell", inline: $script
         master.vm.provision "ansible" do |ansible|
-            ansible.playbook = "master-playbook.yml"
+            ansible.playbook = "kubernetes-playbooks/master-playbook.yml"
             ansible.extra_vars = {
                 node_ip: "192.168.50.10",
             }
@@ -34,7 +39,7 @@ Vagrant.configure("2") do |config|
             node.vm.hostname = "k8s-client-#{i}"
             node.vm.provision "shell", inline: $script
             node.vm.provision "ansible" do |ansible|
-                ansible.playbook = "client-playbook.yml"
+                ansible.playbook = "kubernetes-playbooks/client-playbook.yml"
                 ansible.extra_vars = {
                     node_ip: "192.168.50.#{i + 10}",
                 }

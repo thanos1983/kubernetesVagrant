@@ -73,12 +73,12 @@ $ vagrant destroy -f
 Sample of complete cluster with 1 Master nodes and 2 Client nodes:
 
 ```bash
-➜  kubernetesVagrant git:(main) ✗ kubectl --kubeconfig .kube/config get nodes  
+➜  kubernetesVagrant git:(main) ✗ kubectl --kubeconfig kubernetes-playbooks/.kube/config get nodes  
 NAME           STATUS     ROLES                  AGE     VERSION
 k8s-client-1   Ready      <none>                 3m18s   v1.22.1
 k8s-client-2   NotReady   <none>                 15s     v1.22.1
 k8s-master     Ready      control-plane,master   6m30s   v1.22.1
-➜  kubernetesVagrant git:(main) ✗ kubectl --kubeconfig .kube/config get pods -A
+➜  kubernetesVagrant git:(main) ✗ kubectl --kubeconfig kubernetes-playbooks/.kube/config get pods -A
 NAMESPACE     NAME                                       READY   STATUS    RESTARTS   AGE
 kube-system   calico-kube-controllers-58497c65d5-rhdpv   1/1     Running   0          13m
 kube-system   calico-node-bnspq                          1/1     Running   0          7m37s
