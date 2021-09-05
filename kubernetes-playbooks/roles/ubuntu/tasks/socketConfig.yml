@@ -17,14 +17,7 @@
     name: kubernetes
     tasks_from: kernel
 
-- name: Containerd configurations for kubernetes
+- name: Socket configurations for kubernetes
   ansible.builtin.include_role:
     name: kubernetes
-    tasks_from: containerd
-  when: kubernetesConfigurations.socket == "containerd"
-
-- name: CRI-O configurations for kubernetes
-  ansible.builtin.include_role:
-    name: kubernetes
-    tasks_from: crio
-  when: kubernetesConfigurations.socket == "crio"
+    tasks_from: "{{ kubernetesConfigurations.socket }}"

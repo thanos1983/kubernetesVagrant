@@ -1,9 +1,19 @@
 ---
-i# tasks file for roles/kubernetes crio
+# tasks file for roles/kubernetes crio
+- name: Create CRI-O configuration directory
+  ansible.builtin.file:
+    path: "{{ crio.confDir.path }}"
+    state: "{{ crio.confDir.state }}"
+    mode: "{{ crio.confDir.mode }}"
+
 - name: Copy CRI-O configuration files
   ansible.builtin.copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}/{{ item.src }}"
-  loop: "{{ crio }}"
-  notify: crio restart
- 
+  loop: "{{ crio.confFiles }}"
+
+- name: Restart CRI-O service to load conf
+  ansible.builtin.service:
+    name: crio
+    state: restarted
+    enabled: yes

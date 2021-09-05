@@ -11,13 +11,12 @@
     name: kubernetes
     tasks_from: swap
 
-- name: Apply socket configurations for Ubuntu
-  ansible.builtin.include_tasks: socketConfig.yml
-
 - name: Install kubernetes packages for Ubuntu
   ansible.builtin.include_tasks: installPackages.yml
+
+- name: Apply socket configurations for Ubuntu
+  ansible.builtin.include_tasks: socketConfig.yml
 
 - name: Prerequisites for kubernetes
   ansible.builtin.include_role:
     name: kubernetes
-

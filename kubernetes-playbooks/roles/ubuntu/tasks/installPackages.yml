@@ -1,6 +1,6 @@
 ---
 # tasks file for roles/installPackages
-- name: Install core and kubernetes packages
+- name: Install core packages
   ansible.builtin.apt:
     name: "{{ ubuntu.packages }}"
     update_cache: yes
@@ -11,4 +11,3 @@
     name: "{{ ubuntu.socket[kubernetesConfigurations.socket] }}"
     update_cache: yes
     state: present
-

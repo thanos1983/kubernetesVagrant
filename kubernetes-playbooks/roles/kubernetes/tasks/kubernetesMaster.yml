@@ -1,13 +1,25 @@
 ---
 # tasks file for roles/kubernetes kubernetesMaster
-- name: Initialize the Kubernetes cluster using kubeadm
+- name: Initialize the Kubernetes cluster using kubeadm with socket containerd
   ansible.builtin.shell:
     cmd: |
       kubeadm init \
-      --apiserver-advertise-address="{{ node_ip }}" \
-      --apiserver-cert-extra-sans="{{ node_ip }}" \
+      --apiserver-advertise-address "{{ node_ip }}" \
+      --apiserver-cert-extra-sans "{{ node_ip }}" \
       --node-name k8s-master \
-      --pod-network-cidr=192.168.0.0/16
+      --pod-network-cidr 192.168.0.0/16
+  when: kubernetesConfigurations.socket == "containerd"
+
+- name: Initialize the Kubernetes cluster using kubeadm with socket crio
+  ansible.builtin.shell:
+    cmd: |
+      kubeadm init \
+      --apiserver-advertise-address "{{ node_ip }}" \
+      --apiserver-cert-extra-sans "{{ node_ip }}" \
+      --node-name k8s-master \
+      --cri-socket unix:///var/run/crio/crio.sock \
+      --pod-network-cidr 192.168.0.0/16
+  when: kubernetesConfigurations.socket == "crio"
 
 - name: Create kube directory
   ansible.builtin.file:
@@ -36,12 +48,14 @@
   register: join_command
 
 - name: Copy join command to local file
+  become: false
   ansible.builtin.copy:
     content: "{{ join_command.stdout_lines[0] }}"
     dest: "./join-command"
   delegate_to: localhost
 
-- name: Synchronization using rsync protocol (pull)
+- name: Pull .kube dir to local
+  become: false
   ansible.posix.synchronize:
     src: /home/vagrant/.kube
     dest: "{{ playbook_dir }}"

@@ -15,4 +15,9 @@
     path: /etc/containerd/config.toml
     regexp: '(\s+)SystemdCgroup = false(\s+.*)?$'
     replace: '\1SystemdCgroup = true\2'
-  notify: containerd restart
+
+- name: Restart Containerd serice to load conf
+    ansible.builtin.service:
+    name: containerd
+    state: restarted
+    enabled: yes
