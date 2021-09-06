@@ -42,6 +42,11 @@
   ansible.builtin.shell:
     cmd: "kubectl create -f https://docs.projectcalico.org/manifests/calico.yaml"
 
+- name: Install metrics server
+  become: false
+  ansible.builtin.shell:
+    cmd: "kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml"
+
 - name: Generate join command
   ansible.builtin.shell:
     cmd: kubeadm token create --print-join-command

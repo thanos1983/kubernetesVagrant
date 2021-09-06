@@ -361,7 +361,7 @@ join-command
 *.swo
 
 # Ignore Vagrant
-.vagrant/
+.vagrant
 
 # Ignore joincommand
-join-command
+join-command.sh

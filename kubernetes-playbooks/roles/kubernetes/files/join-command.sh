@@ -1,1 +1,0 @@
-kubeadm join 192.168.50.10:6443 --token l1kqsd.25w6ywwskdpqs9kr --discovery-token-ca-cert-hash sha256:48cf17c45043142efab9d0e076a675c287a8bfba8fae605f88a2112e4113daea  --cri-socket unix:///var/run/crio/crio.sock
