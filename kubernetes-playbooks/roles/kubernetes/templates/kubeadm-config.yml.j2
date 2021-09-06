@@ -15,7 +15,7 @@ apiServer:
     insecure-port: "0"
   certSANs:
   - {{ ansible_hostname }}
-{% for ind in range(0, ( number_of_nodes | length | int )) %}
+{% for ind in range(0, ( number_of_nodes )) %}
   - {{ node_ip | ipmath(ind) }}
 {% if ind != 0 %}
   - k8s-client-{{ ind }}
