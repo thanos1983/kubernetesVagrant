@@ -1,7 +1,8 @@
 kubernetesConfigurations:
-  version: "1.22.1"
-  socket: "crio" # crio or containerd
-  crioVersion: "1.22"
+  version:
+    major: "1.22"
+    minor: "1"
+  socket: "containerd" # crio or containerd
   operatingSystem: "xUbuntu_20.04"
 
 ubuntu:
@@ -20,8 +21,8 @@ ubuntu:
           url: "https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/{{ kubernetesConfigurations.operatingSystem }}/Release.key",
           state: "present",
         }
-      - { 
-          url: "https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:{{ kubernetesConfigurations.crioVersion }}/{{ kubernetesConfigurations.operatingSystem }}/Release.key",
+      - {
+          url: "https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:{{ kubernetesConfigurations.version.major }}/{{ kubernetesConfigurations.operatingSystem }}/Release.key",
           state: "present",
         }
   aptRepository:
@@ -32,7 +33,7 @@ ubuntu:
           state: "present",
         }
     crio:
-      - { 
+      - {
           repo: "deb https://apt.kubernetes.io/ kubernetes-xenial main",
           filename: "kubernetes.list",
           state: "present",
@@ -43,8 +44,8 @@ ubuntu:
           state: "present",
         }
       - {
-          repo: "deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/{{ kubernetesConfigurations.crioVersion }}/{{ kubernetesConfigurations.operatingSystem }}/ /",
-          filename: "devel:kubic:libcontainers:stable:cri-o:{{ kubernetesConfigurations.crioVersion }}.list",
+          repo: "deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/{{ kubernetesConfigurations.version.major }}/{{ kubernetesConfigurations.operatingSystem }}/ /",
+          filename: "devel:kubic:libcontainers:stable:cri-o:{{ kubernetesConfigurations.version.major }}.list",
           state: "present",
         }
   packages:
@@ -53,9 +54,9 @@ ubuntu:
     - curl
     - gnupg-agent
     - software-properties-common
-    - kubelet={{ kubernetesConfigurations.version }}-00
-    - kubeadm={{ kubernetesConfigurations.version }}-00
-    - kubectl={{ kubernetesConfigurations.version }}-00
+    - kubelet={{ kubernetesConfigurations.version.major }}.{{ kubernetesConfigurations.version.minor }}-00
+    - kubeadm={{ kubernetesConfigurations.version.major }}.{{ kubernetesConfigurations.version.minor }}-00
+    - kubectl={{ kubernetesConfigurations.version.major }}.{{ kubernetesConfigurations.version.minor }}-00
   socket:
     containerd:
       - containerd

@@ -17,7 +17,7 @@
     replace: '\1SystemdCgroup = true\2'
 
 - name: Restart Containerd serice to load conf
-    ansible.builtin.service:
+  ansible.builtin.service:
     name: containerd
     state: restarted
     enabled: yes
