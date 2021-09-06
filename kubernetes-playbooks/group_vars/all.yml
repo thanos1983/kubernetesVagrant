@@ -2,7 +2,7 @@ kubernetesConfigurations:
   version:
     major: "1.22"
     minor: "1"
-  socket: "containerd" # crio or containerd
+  socket: "crio" # crio or containerd
   operatingSystem: "xUbuntu_20.04"
 
 ubuntu:
@@ -67,6 +67,9 @@ ubuntu:
       - cri-o-runc
 
 kubernetes:
+  socket:
+    crio: unix:///var/run/crio/crio.sock
+    containerd: /var/run/containerd/containerd.sock
   directories:
     modules:
       path: "/etc/modules-load.d"

@@ -1,0 +1,34 @@
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: InitConfiguration
+localAPIEndpoint:
+  advertiseAddress: {{ node_ip }}
+  bindPort: 6443
+nodeRegistration:
+  criSocket: unix:///var/run/crio/crio.sock
+  name: node
+  taints: null
+---
+apiServer:
+  timeoutForControlPlane: 4m0s
+apiVersion: kubeadm.k8s.io/v1beta2
+certificatesDir: /etc/kubernetes/pki
+clusterName: kubernetes
+controllerManager: {}
+dns:
+  type: CoreDNS
+etcd:
+  local:
+    dataDir: /var/lib/etcd
+imageRepository: k8s.gcr.io
+kind: ClusterConfiguration
+kubernetesVersion: {{ kubernetesConfigurations.version.major }}.{{ kubernetesConfigurations.version.minor }}
+networking:
+  dnsDomain: cluster.local
+  serviceSubnet: 10.85.0.0/16
+scheduler: {}
+---
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+imageGCLowThresholdPercent: 80
+imageGCHighThresholdPercent: 85
+cgroupDriver: systemd

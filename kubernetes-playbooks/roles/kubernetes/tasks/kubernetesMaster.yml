@@ -1,24 +1,30 @@
 ---
 # tasks file for roles/kubernetes kubernetesMaster
-- name: Initialize the Kubernetes cluster using kubeadm with socket Containerd
-  ansible.builtin.shell:
-    cmd: |
-      kubeadm init \
-      --apiserver-advertise-address "{{ node_ip }}" \
-      --apiserver-cert-extra-sans "{{ node_ip }}" \
-      --node-name k8s-master \
-      --pod-network-cidr 192.168.0.0/16
-  when: kubernetesConfigurations.socket == "containerd"
+# - name: Initialize the Kubernetes cluster using kubeadm with socket Containerd
+#  ansible.builtin.shell:
+#    cmd: |
+#      kubeadm init \
+#      --apiserver-advertise-address "{{ node_ip }}" \
+#      --apiserver-cert-extra-sans "{{ node_ip }}" \
+#      --node-name k8s-master \
+#      --pod-network-cidr 10.85.0.0/16
+#  when: kubernetesConfigurations.socket == "containerd"
+
+- name: Debug
+  ansible.builtin.debug:
+    msg: "{{ number_of_nodes }}"
+
+- name: Copy kubeadm-config.yml to /tmp
+  ansible.builtin.template:
+    src: kubeadm-config.yml.j2
+    dest: /tmp/kubeadm-config.yml
 
 - name: Initialize the Kubernetes cluster using kubeadm with socket CRI-O
   ansible.builtin.shell:
     cmd: |
       kubeadm init \
-      --apiserver-advertise-address "{{ node_ip }}" \
-      --apiserver-cert-extra-sans "{{ node_ip }}" \
-      --node-name k8s-master \
-      --cri-socket unix:///var/run/crio/crio.sock \
-      --pod-network-cidr 192.168.0.0/16
+      --upload-certs \
+      --config /tmp/kubeadm-config.yml
   when: kubernetesConfigurations.socket == "crio"
 
 - name: Create kube directory

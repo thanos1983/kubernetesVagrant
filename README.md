@@ -95,5 +95,19 @@ kube-system   kube-proxy-ttzln                           1/1     Running   0    
 kube-system   kube-scheduler-k8s-master                  1/1     Running   0          13m
 ```
 
+## Kuberenets release notes (versions)
+The user can refer to the official up to date release page of kubernetes [kubernetes/Releases](https://kubernetes.io/releases/). Once the user decides the Major and Minor version that desires to run the cluster can set these values in the [kubernetes-playbooks/group_vars](kubernetes-playbooks/group_vars) file.
+
+Sample of configuration:
+
+```bash
+kubernetesConfigurations:
+  version:
+    major: "1.20"
+    minor: "10"
+  socket: "crio" # crio or containerd
+  operatingSystem: "xUbuntu_20.04"
+```
+
 ## Where to find the .kube dir
 The script will automatically download the whole .kube dir so the user will be able to connect to the cluster directly from the directory.

@@ -3,18 +3,3 @@
 - name: Join Client in the cluster
   ansible.builtin.script:
     cmd: "{{ role_path }}/files/join-command.sh"
-
-# - name: Copy the join command to server location
-#  ansible.builtin.copy:
-#    src: join-command
-#    dest: /tmp/join-command.sh
-#    mode: "0777"
- 
-# - name: Join the node to cluster
-#  ansible.builtin.shell:
-#    cmd: sh /tmp/join-command.sh
-
-# - name: Remove join-command.sh script
-#  ansible.builtin.file:
-#    path: /tmp/join-command.sh
-#    state: absent
