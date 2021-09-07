@@ -1,0 +1,13 @@
+---
+# tasks file for roles/kubernetes kubeadm
+- name: Copy kubeadm-config.yml to /tmp
+  ansible.builtin.template:
+    src: kubeadm-config.yml.j2
+    dest: /tmp/kubeadm-config.yml
+ 
+- name: Initialize kubernetes cluster with kubeadm file
+  ansible.builtin.shell:
+    cmd: |
+      kubeadm init \
+      --upload-certs \
+      --config /tmp/kubeadm-config.yml

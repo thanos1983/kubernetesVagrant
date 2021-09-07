@@ -3,3 +3,54 @@
 mount:
   - { src: "none", path: "swap", fstype: "swap", state: "present" }
   - { src: "none", path: "none", fstype: "swap", state: "present" }
+
+kubernetes:
+  socket:
+    crio: unix:///var/run/crio/crio.sock
+    containerd: /var/run/containerd/containerd.sock
+  directories:
+    modules:
+      path: "/etc/modules-load.d"
+      state: "directory"
+      mode: "0755"
+  networkElement:
+    calico: 10.85.0.0/16
+    weavenet: 10.200.0.0/16
+  modules:
+    - { name: "overlay", state: "present" }
+    - { name: "br_netfilter", state: "present" }
+  kernelParameters:
+    - {
+        sysctl_file: "/etc/sysctl.d/99-kubernetes-cri.conf",
+        name: "net.ipv4.ip_forward",
+        value: "1",
+      }
+    - {
+        sysctl_file: "/etc/sysctl.d/99-kubernetes-cri.conf",
+        name: "net.bridge.bridge-nf-call-iptables",
+        value: "1",
+      }
+    - {
+        sysctl_file: "/etc/sysctl.d/99-kubernetes-cri.conf",
+        name: "net.bridge.bridge-nf-call-ip6tables",
+        value: "1",
+      }
+
+containerd:
+  path: "/etc/containerd"
+  state: "directory"
+  mode: "0755"
+
+crio:
+  confDir:
+    path: "/etc/crio/crio.conf.d"
+    state: "directory"
+    mode: "0755"
+  confFiles:
+    - { src: "crio.conf", dest: "/etc/crio" }
+    - { src: "01-metrics.conf", dest: "/etc/crio/crio.conf.d" }
+    - { src: "containers.conf", dest: "/usr/share/containers" }
+    - { src: "02-cgroup-manager.conf", dest: "/etc/crio/crio.conf.d" }
+    - { src: "03-crio-crun.conf", dest: "/etc/crio/crio.conf.d" }
+    - { src: "03-crio-runc.conf", dest: "/etc/crio/crio.conf.d" }
+

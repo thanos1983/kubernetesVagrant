@@ -1,2 +1,24 @@
 ---
 # vars file for roles/master
+kubeadm:
+  cluster:
+    namespace: 'kubeless'
+  clusterRoleUser:
+    name: 'admin-user'
+    namespace: 'kubernetes-dashboard'
+
+rbac:
+  serviceAccount:
+    metadata:
+      name: '{{ kubeadm.clusterRoleUser.name }}'
+      namespace: '{{ kubeadm.clusterRoleUser.namespace }}'
+  clusterRoleBinding:
+    metadata:
+      name: '{{ kubeadm.clusterRoleUser.name }}'
+    roleRef:
+      kind: 'ClusterRole' # Role or ClusterRole
+      name: 'cluster-admin' # Name of the Role or ClusterRole to bind to
+    subjects:
+      kind: 'ServiceAccount' # User or ServiceAccount
+      name: '{{ kubeadm.clusterRoleUser.name }}'
+      namespace: '{{ kubeadm.clusterRoleUser.namespace }}'

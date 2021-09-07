@@ -1,2 +1,63 @@
 ---
 # vars file for roles/ubuntu
+ubuntu:
+  aptKey:
+    containerd:
+      - {
+          url: "https://packages.cloud.google.com/apt/doc/apt-key.gpg",
+          state: "present",
+        }
+    crio:
+      - {
+          url: "https://packages.cloud.google.com/apt/doc/apt-key.gpg",
+          state: "present",
+        }
+      - {
+          url: "https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/{{ kubernetesConfigurations.operatingSystem }}/Release.key",
+          state: "present",
+        }
+      - {
+          url: "https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:{{ kubernetesConfigurations.version.major }}/{{ kubernetesConfigurations.operatingSystem }}/Release.key",
+          state: "present",
+        }
+  aptRepository:
+    containerd:
+      - {
+          repo: "deb https://apt.kubernetes.io/ kubernetes-xenial main",
+          filename: "kubernetes.list",
+          state: "present",
+        }
+    crio:
+      - {
+          repo: "deb https://apt.kubernetes.io/ kubernetes-xenial main",
+          filename: "kubernetes.list",
+          state: "present",
+        }
+      - {
+          repo: "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/{{ kubernetesConfigurations.operatingSystem }}/ /",
+          filename: "devel:kubic:libcontainers:stable.list",
+          state: "present",
+        }
+      - {
+          repo: "deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/{{ kubernetesConfigurations.version.major }}/{{ kubernetesConfigurations.operatingSystem }}/ /",
+          filename: "devel:kubic:libcontainers:stable:cri-o:{{ kubernetesConfigurations.version.major }}.list",
+          state: "present",
+        }
+  packages:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - gnupg-agent
+    - software-properties-common
+    - kubelet={{ kubernetesConfigurations.version.major }}.{{ kubernetesConfigurations.version.minor }}-00
+    - kubeadm={{ kubernetesConfigurations.version.major }}.{{ kubernetesConfigurations.version.minor }}-00
+    - kubectl={{ kubernetesConfigurations.version.major }}.{{ kubernetesConfigurations.version.minor }}-00
+  socket:
+    containerd:
+      - containerd
+    crio:
+      - runc
+      - crun
+      - cri-o
+      - cri-o-runc
+

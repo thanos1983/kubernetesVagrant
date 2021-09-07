@@ -1,67 +1,16 @@
 ---
 # tasks file for roles/kubernetes kubernetesMaster
-- name: Copy kubeadm-config.yml to /tmp
-  ansible.builtin.template:
-    src: kubeadm-config.yml.j2
-    dest: /tmp/kubeadm-config.yml
+- name: Launch master node
+  ansible.builtin.include_tasks: kubeadm.yml
 
-- name: Initialize kubernetes cluster with kubeadm file
-  ansible.builtin.shell:
-    cmd: |
-      kubeadm init \
-      --upload-certs \
-      --config /tmp/kubeadm-config.yml
+- name: Apply kube configurations from remote and local
+  ansible.builtin.include_tasks: kubeConfig.yml
 
-- name: Create kube directory
-  ansible.builtin.file:
-    path: /home/vagrant/.kube
-    owner: vagrant
-    group: vagrant
-    recurse: yes
+- name: Apply network element for the cluster
+  ansible.builtin.include_tasks: "{{ kubernetesConfigurations.networkElement }}.yml"
 
-- name: Setup kubeconfig for vagrant user
-  ansible.builtin.copy:
-    src: /etc/kubernetes/admin.conf
-    dest: /home/vagrant/.kube/config
-    remote_src: yes
-    owner: vagrant
-    group: vagrant
-    mode: "0600"
+- name: Create dashboard and cluster role usser with permissions
+  ansible.builtin.include_tasks: dashboard.yml
 
-- name: Install calico pod network
-  become: false
-  ansible.builtin.shell:
-    cmd: "kubectl create -f https://docs.projectcalico.org/manifests/calico.yaml"
-
-- name: Install metrics server
-  become: false
-  ansible.builtin.shell:
-    cmd: "kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml"
-
-- name: Generate join command
-  ansible.builtin.shell:
-    cmd: kubeadm token create --print-join-command
-  register: join_command
-
-- name: Copy join command to local file for Containerd
-  become: false
-  ansible.builtin.copy:
-    content: "{{ join_command.stdout_lines[0] }}"
-    dest: "{{ role_path }}/files/join-command.sh"
-  when: kubernetesConfigurations.socket == "containerd"
-  delegate_to: localhost
-
-- name: Copy join command to local file for CRI-O
-  become: false
-  ansible.builtin.copy:
-    content: "{{ join_command.stdout_lines[0] }} --cri-socket unix:///var/run/crio/crio.sock"
-    dest: "{{ role_path }}/files/join-command.sh"
-  when: kubernetesConfigurations.socket == "crio"
-  delegate_to: localhost
-
-- name: Pull .kube dir to local
-  become: false
-  ansible.posix.synchronize:
-    src: /home/vagrant/.kube
-    dest: "{{ playbook_dir }}"
-    mode: pull
+- name: Apply metrics for the cluster
+  ansible.builtin.include_tasks: metrics.yml

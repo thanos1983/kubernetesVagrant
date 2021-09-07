@@ -96,7 +96,7 @@ kube-system   kube-scheduler-k8s-master                  1/1     Running   0    
 ```
 
 ## Kuberenets release notes (versions)
-The user can refer to the official up to date release page of kubernetes [kubernetes/Releases](https://kubernetes.io/releases/). Once the user decides the Major and Minor version that desires to run the cluster can set these values in the [kubernetes-playbooks/group_vars](kubernetes-playbooks/group_vars) file.
+The user can refer to the official up to date release page of kubernetes [kubernetes/Releases](https://kubernetes.io/releases/). Once the user decides the Major and Minor version that desires to run the cluster can set these values in the [kubernetes-playbooks/group_vars/all.yml](kubernetes-playbooks/group_vars/all.yml) file.
 
 Sample of configuration:
 

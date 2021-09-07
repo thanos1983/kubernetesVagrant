@@ -1,5 +1,5 @@
 ---
-# tasks file for roles/kubernetes
+# tasks file for roles/kubernetes main
 - name: Configure node ip
   ansible.builtin.lineinfile:
     create: yes

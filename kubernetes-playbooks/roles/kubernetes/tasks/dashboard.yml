@@ -1,0 +1,12 @@
+---
+# tasks file for roles/kubernetes dashboard
+- name: Install dashboard pod
+  become: false
+  ansible.builtin.shell:
+    cmd: kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.3.1/aio/deploy/recommended.yaml
+
+- name: Create ServiceAccount
+  ansible.builtin.include_tasks: serviceAccount.yml
+
+- name: Create ClusterRoleBinding
+  ansible.builtin.include_tasks: clusterRoleBinding.yml

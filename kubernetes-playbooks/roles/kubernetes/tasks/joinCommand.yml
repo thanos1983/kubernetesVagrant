@@ -1,0 +1,14 @@
+---
+# tasks file for roles/kubernetes joinCommand
+- name: Generate join command
+  ansible.builtin.shell:
+    cmd: kubeadm token create --print-join-command
+  register: join_command
+
+- name: Copy join command to local
+  become: false
+  ansible.builtin.copy:
+    content: "{{ join_command.stdout_lines[0] }}"
+    dest: "{{ role_path }}/files/join-command.sh --cri-socket {{ kubernetes.socket[kubernetesConfigurations.socket] }}"
+  connection: local
+  delegate_to: localhost

@@ -1,0 +1,6 @@
+---
+# tasks file for roles/kubernetes calico
+- name: Install calico pod network
+  become: false
+  ansible.builtin.shell:
+    cmd: kubectl create -f https://docs.projectcalico.org/manifests/calico.yaml

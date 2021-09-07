@@ -1,4 +1,4 @@
-apiVersion: kubeadm.k8s.io/v1beta2
+apiVersion: kubeadm.k8s.io/v1beta3
 kind: InitConfiguration
 localAPIEndpoint:
   advertiseAddress: {{ node_ip }}
@@ -21,7 +21,7 @@ apiServer:
   - k8s-client-{{ ind }}
 {% endif %}
 {% endfor %}
-apiVersion: kubeadm.k8s.io/v1beta2
+apiVersion: kubeadm.k8s.io/v1beta3
 certificatesDir: /etc/kubernetes/pki
 clusterName: kubernetes
 controllerManager: {}
@@ -35,7 +35,8 @@ kind: ClusterConfiguration
 kubernetesVersion: {{ kubernetesConfigurations.version.major }}.{{ kubernetesConfigurations.version.minor }}
 networking:
   dnsDomain: cluster.local
-  serviceSubnet: 10.85.0.0/16
+  podSubnet: {{ kubernetes.networkElement[kubernetesConfigurations.networkElement] }}
+  serviceSubnet: 10.96.0.0/12
 scheduler: {}
 ---
 apiVersion: kubelet.config.k8s.io/v1beta1

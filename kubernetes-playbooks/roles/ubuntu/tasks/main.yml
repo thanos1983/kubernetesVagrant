@@ -15,7 +15,9 @@
   ansible.builtin.include_tasks: installPackages.yml
 
 - name: Apply socket configurations for Ubuntu
-  ansible.builtin.include_tasks: socketConfig.yml
+  ansible.builtin.include_role:
+    name: kubernetes
+    tasks_from: socketConfig.yml
 
 - name: Prerequisites for kubernetes
   ansible.builtin.include_role:
