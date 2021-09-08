@@ -6,16 +6,20 @@ mount:
 
 kubernetes:
   socket:
-    crio: unix:///var/run/crio/crio.sock
-    containerd: /var/run/containerd/containerd.sock
+    crio: "unix:///var/run/crio/crio.sock"
+    containerd: "/var/run/containerd/containerd.sock"
   directories:
     modules:
       path: "/etc/modules-load.d"
       state: "directory"
       mode: "0755"
   networkElement:
-    calico: 10.85.0.0/16
-    weavenet: 10.200.0.0/16
+    calico:
+      range: "10.85.0.0/16"
+    weavenet:
+      range: "10.200.0.0/16"
+      passwordFileName: "weave-passwd"
+      passwordFilePath: "/var/lib/weave"
   modules:
     - { name: "overlay", state: "present" }
     - { name: "br_netfilter", state: "present" }
@@ -54,3 +58,7 @@ crio:
     - { src: "03-crio-crun.conf", dest: "/etc/crio/crio.conf.d" }
     - { src: "03-crio-runc.conf", dest: "/etc/crio/crio.conf.d" }
 
+kubectl:
+  proxy:
+    port: 8001
+    ip: '0.0.0.0'

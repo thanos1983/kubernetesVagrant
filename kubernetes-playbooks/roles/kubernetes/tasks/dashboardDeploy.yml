@@ -1,0 +1,32 @@
+---
+#i tasks file for roles/kubernetes dashboardDeploy
+- name: Deploy Kubernetes Dashboard, create proxy routing and validate
+  block:
+    - name: Deploy dashboard pod
+      ansible.builtin.shell:
+        cmd: kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.3.1/aio/deploy/recommended.yaml
+
+    - name: Launch kubectl proxy (detatched)
+      ansible.builtin.shell:
+        cmd: "nohup kubectl proxy --address {{ kubectl.proxy.ip }} --port {{ kubectl.proxy.port }} --accept-hosts '.*' &"
+
+    - name: Gather facts on listening ports
+      listen_ports_facts:
+
+    - name: Fail if dashboard port is not listening
+      ansible.builtin.fail:
+        msg: "Check that kubectl proxy is running on '{{ ansible_hostname }}' and listens on port '{{ kubectl.proxy.port }}'"
+      when: "kubectl.proxy.port not in ansible_facts.tcp_listen | map(attribute='port') | sort | list"
+
+    - name: Fail if the dashboard url is not accessible
+      ansible.builtin.uri:
+        url: "http://localhost:{{ kubectl.proxy.port }}/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/"
+        return_content: yes
+      register: dashboard
+      until: dashboard.status == 200
+      retries: 10
+      delay: 5
+      failed_when:
+        - dashboard.status != 200
+        - "'Kubernetes Dashboard' not in dashboard.content"
+  become: false

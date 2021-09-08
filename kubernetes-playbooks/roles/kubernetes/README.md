@@ -25,6 +25,11 @@ Example Playbook
 
 This playbook is intented to be used by other roles so no documentation on this section.
 
+Network Elements
+----------------
+- Calico documentation [Quickstart for Calico on Kubernetes](https://docs.projectcalico.org/getting-started/kubernetes/quickstart)
+- Weave-Net official documentation [Integrating Kubernetes via the Addon](https://www.weave.works/docs/net/latest/kubernetes/kube-addon/)
+
 CRI-O
 -----
 

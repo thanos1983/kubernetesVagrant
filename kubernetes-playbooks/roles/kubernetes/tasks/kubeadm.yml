@@ -5,7 +5,7 @@
     src: kubeadm-config.yml.j2
     dest: /tmp/kubeadm-config.yml
  
-- name: Initialize kubernetes cluster with kubeadm file
+- name: Initialize kubernetes cluster with kubeadm init
   ansible.builtin.shell:
     cmd: |
       kubeadm init \

@@ -1,6 +1,20 @@
 ---
-# tasks file for roles/kubernetes weavenet
-- name: Install weavenet pod network
+# tasks file for roles/kubernetes Weave-Net
+- name: Create weave net password directory if it does not exist
+  ansible.builtin.file:
+    path: "{{ kubernetes.networkElement[kubernetesConfigurations.networkElement].passwordFilePath }}"
+    state: directory
+
+- name: Copy content in password file for Weave-Net
+  ansible.builtin.shell:
+    cmd: "head -c 16 /dev/urandom | shasum -a 256 | cut -d' ' -f1 | tee {{ kubernetes.networkElement[kubernetesConfigurations.networkElement].passwordFilePath }}/{{ kubernetes.networkElement[kubernetesConfigurations.networkElement].passwordFileName }}"
+
+- name: Create secret for encryption for Weave-Net
   become: false
   ansible.builtin.shell:
-    cmd: kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')&password-secret=weave-passwd&env.IPALLOC_RANGE=192.168.0.0/24"
+    cmd: "kubectl create secret -n kube-system generic {{ kubernetes.networkElement[kubernetesConfigurations.networkElement].passwordFileName }} --from-file={{ kubernetes.networkElement[kubernetesConfigurations.networkElement].passwordFilePath }}/{{ kubernetes.networkElement[kubernetesConfigurations.networkElement].passwordFileName }}"
+
+- name: Install Weave-Net pod network element
+  become: false
+  ansible.builtin.shell:
+    cmd: kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')&password-secret={{ kubernetes.networkElement[kubernetesConfigurations.networkElement].passwordFileName }}"
