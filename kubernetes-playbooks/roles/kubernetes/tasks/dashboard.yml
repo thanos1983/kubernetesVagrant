@@ -9,3 +9,5 @@
 - name: Create ClusterRoleBinding
   ansible.builtin.include_tasks: clusterRoleBinding.yml
 
+- name: Dashboard token processes
+  ansible.builtin.include_tasks: dashboardToken.yml

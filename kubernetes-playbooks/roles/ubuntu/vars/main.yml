@@ -48,6 +48,7 @@ ubuntu:
     - ca-certificates
     - curl
     - gnupg-agent
+    - net-tools
     - software-properties-common
     - kubelet={{ kubernetesConfigurations.version.major }}.{{ kubernetesConfigurations.version.minor }}-00
     - kubeadm={{ kubernetesConfigurations.version.major }}.{{ kubernetesConfigurations.version.minor }}-00

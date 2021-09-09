@@ -1,5 +1,5 @@
 ---
-#i tasks file for roles/kubernetes dashboardDeploy
+# tasks file for roles/kubernetes dashboardDeploy
 - name: Deploy Kubernetes Dashboard, create proxy routing and validate
   block:
     - name: Deploy dashboard pod
@@ -13,12 +13,12 @@
     - name: Gather facts on listening ports
       listen_ports_facts:
 
-    - name: Fail if dashboard port is not listening
+    - name: Validate that the dashboard port is listening
       ansible.builtin.fail:
         msg: "Check that kubectl proxy is running on '{{ ansible_hostname }}' and listens on port '{{ kubectl.proxy.port }}'"
       when: "kubectl.proxy.port not in ansible_facts.tcp_listen | map(attribute='port') | sort | list"
 
-    - name: Fail if the dashboard url is not accessible
+    - name: Validate that the dashboard url is accessible max 50 sec
       ansible.builtin.uri:
         url: "http://localhost:{{ kubectl.proxy.port }}/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/"
         return_content: yes

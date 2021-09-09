@@ -2,7 +2,6 @@ kubernetesConfigurations:
   version:
     major: "1.22"
     minor: "1"
-  socket: "containerd" # crio or containerd
+  socket: "crio" # crio or containerd
   operatingSystem: "xUbuntu_20.04"
-  networkElement: weavenet # calico or weavenet
-
+  networkElement: "flannel" # calico, flannel or weavenet

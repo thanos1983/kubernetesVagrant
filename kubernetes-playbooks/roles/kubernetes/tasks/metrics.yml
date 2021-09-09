@@ -1,15 +1,24 @@
 ---
 # tasks file for roles/kubernetes metrics.yml
-- name: Apply CRI-O metrics if choosen as a socket
-  ansible.builtin.shell:
-    cmd: kubectl create -f https://github.com/cri-o/cri-o/blob/master/contrib/metrics-exporter/cluster.yaml
-  when: kubernetesConfigurations.socket == "crio"
+- name: Deploy Metrics
+  block:
+    - name: Apply CRI-O metrics if choosen as a socket
+      ansible.builtin.shell:
+        cmd: kubectl --kubeconfig {{ playbook_dir }}/.kube/config apply -f https://github.com/cri-o/cri-o/blob/master/contrib/metrics-exporter/cluster.yaml
+      when: kubernetesConfigurations.socket == "crio"
+      tags: [ never ]
 
-- name: Install metrics server
+    - name: Apply CRI-O metrics if choosen as a socket
+      community.kubernetes.k8s:
+        kubeconfig: "{{ playbook_dir }}/.kube/config"
+        src: "{{ role_path }}/files/cluster.yml"
+        state: present
+
+    - name: Install metrics server
+      community.kubernetes.k8s:
+        state: present
+        src: "{{ role_path }}/files/components.yaml"
+        kubeconfig: "{{ playbook_dir }}/.kube/config"
   become: false
-  community.kubernetes.k8s:
-    state: present
-    src: "{{ role_path }}/files/components.yaml"
-    kubeconfig: "{{ playbook_dir }}/.kube/config"
   connection: local
   delegate_to: localhost

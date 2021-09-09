@@ -1,0 +1,6 @@
+---
+# tasks file for roles/kubernetes flannel
+- name: Install kube-flannel pod network
+  become: false
+  ansible.builtin.shell:
+    cmd: kubectl create -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml

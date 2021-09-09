@@ -365,3 +365,6 @@ join-command
 
 # Ignore joincommand
 join-command.sh
+
+# Ignore Visual Studio files
+**/.DS_Store
