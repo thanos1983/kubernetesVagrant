@@ -352,9 +352,6 @@ MigrationBackup/
 # Ignore .kube dir
 .kube/
 
-# Ingore join-command
-join-command
-
 # Ignore swap files
 *~
 *.swp
@@ -363,7 +360,7 @@ join-command
 # Ignore Vagrant
 .vagrant
 
-# Ignore joincommand
+# Ignore join-command
 join-command.sh
 
 # Ignore Visual Studio files
