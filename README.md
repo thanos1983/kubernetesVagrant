@@ -35,6 +35,14 @@ The user should install the following packages:
 - VirtualBox
 - Ansible
 - Vagrant
+- Kubectl (relevent to the version of the kubernetes)
+
+Sample kubectl version for client only:
+
+```bash
+kubectl version --client --short
+Client Version: v1.22.1
+```
 
 Sample of how to install the packages on MacOS:
 

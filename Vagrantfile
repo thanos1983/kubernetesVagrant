@@ -20,11 +20,13 @@ Vagrant.configure("2") do |config|
     end
 
     # temporary for dashboard
-    config.vm.network "forwarded_port", guest: 8001, host: 8001
+    # config.vm.network "forwarded_port", guest: 8001, host: 8001
 
     config.vm.define "k8s-master" do |master|
         master.vm.box = IMAGE_NAME
         master.vm.network "private_network", ip: "192.168.50.10"
+        # temporary for dashboard
+        master.vm.network "forwarded_port", guest: 8001, host: 8001
         master.vm.hostname = "k8s-master"
         master.vm.provision "shell", inline: $script
         master.vm.provision "ansible" do |ansible|

@@ -14,3 +14,6 @@
 
 - name: Apply metrics for the cluster
   ansible.builtin.include_tasks: metrics.yml
+
+- name: Create Join Script for Client
+  ansible.builtin.include_tasks: joinCommand.yml

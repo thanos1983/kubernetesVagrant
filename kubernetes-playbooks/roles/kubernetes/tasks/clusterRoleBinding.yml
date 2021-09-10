@@ -1,7 +1,6 @@
 ---
 # tasks file for roles/kubernetes clusterRoleBinding
 - name: Create ClusterRoleBinding for user "{{ rbac.serviceAccount.metadata.name }}"
-  become: false
   community.kubernetes.k8s:
     state: present
     kubeconfig: "{{ playbook_dir }}/.kube/config"
@@ -18,5 +17,6 @@
         - kind: "{{ rbac.clusterRoleBinding.subjects.kind }}"
           name: "{{ rbac.clusterRoleBinding.subjects.name }}"
           namespace: "{{ rbac.clusterRoleBinding.subjects.namespace }}"
+  become: false
   connection: local
   delegate_to: localhost

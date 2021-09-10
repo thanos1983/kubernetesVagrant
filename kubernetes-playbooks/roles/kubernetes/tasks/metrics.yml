@@ -13,12 +13,30 @@
         kubeconfig: "{{ playbook_dir }}/.kube/config"
         src: "{{ role_path }}/files/cluster.yml"
         state: present
+      when: kubernetesConfigurations.socket == "crio"
+
+    - name: Remove Metrics Deployment file if previously downloaded
+      ansible.builtin.file:
+        path: "{{ role_path }}/files/components.yaml"
+        state: absent
+
+    - name: Get Metrics deployment file
+      ansible.builtin.get_url:
+        url: "https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml"
+        dest: "{{ role_path }}/files/components.yaml"
+
+    - name: Add Token for Admin Dashboard
+      ansible.builtin.lineinfile:
+        state: present
+        insertbefore: "- --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname"
+        path: "{{ role_path }}/files/components.yaml"
+        line: "        - --kubelet-insecure-tls"
 
     - name: Install metrics server
       community.kubernetes.k8s:
-        state: present
-        src: "{{ role_path }}/files/components.yaml"
         kubeconfig: "{{ playbook_dir }}/.kube/config"
+        src: "{{ role_path }}/files/components.yaml"
+        state: present
   become: false
   connection: local
   delegate_to: localhost

@@ -11,3 +11,8 @@
       kubeadm init \
       --upload-certs \
       --config /tmp/kubeadm-config.yml
+
+- name: Remove kubeadm-config file
+  ansible.builtin.file:
+    path: /tmp/kubeadm-config.yml
+    state: absent

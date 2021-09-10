@@ -1,5 +1,5 @@
 ---
 # tasks file for roles/kubernetes kubernetesClient
-- name: Join Client in the cluster
+- name: Join client "{{ ansible_hostname }}" in the cluster
   ansible.builtin.script:
     cmd: "{{ role_path }}/files/join-command.sh"

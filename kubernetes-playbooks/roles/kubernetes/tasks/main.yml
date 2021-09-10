@@ -6,6 +6,11 @@
     path: /etc/default/kubelet
     line: KUBELET_EXTRA_ARGS=--node-ip={{ node_ip }}
 
+- name: Configure CPU and Memory for cgroups
+  ansible.builtin.copy:
+    src: 11-cgroups.conf
+    dest: /etc/systemd/system/kubelet.service.d/11-cgroups.conf
+
 - name: Restart kubelet
   ansible.builtin.service:
     name: kubelet
