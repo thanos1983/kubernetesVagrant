@@ -10,15 +10,6 @@
     cmd: |
       kubeadm init \
       --upload-certs \
-      --cri-socket {{ kubernetes.socket[kubernetesConfigurations.socket] }} \
-      --pod-network-cidr {{ kubernetes.networkElement[kubernetesConfigurations.networkElement].range }}
-  tags: [ never ]
- 
-- name: Initialize kubernetes cluster with kubeadm init
-  ansible.builtin.shell:
-    cmd: |
-      kubeadm init \
-      --upload-certs \
       --config /tmp/kubeadm-config.yml
 
 - name: Remove kubeadm-config file

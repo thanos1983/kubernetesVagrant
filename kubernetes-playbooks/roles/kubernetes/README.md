@@ -6,9 +6,11 @@ This role is intented to contain all k8s tasks that we will apply on this role.
 Requirements
 ------------
 
-It is necessary for the user to install the following ansible packages:
+It is necessary for the user to install the following python packages:
 - k8s
 - openshift
+- netaddr
+- ansible
 
 Role Variables
 --------------
@@ -27,8 +29,9 @@ This playbook is intented to be used by other roles so no documentation on this 
 
 ## Network Elements
 ----------------
-- Calico documentation [Quickstart for Calico on Kubernetes](https://docs.projectcalico.org/getting-started/kubernetes/quickstart)
+- Calico official documentation [Quickstart for Calico on Kubernetes](https://docs.projectcalico.org/getting-started/kubernetes/quickstart)
 - Weave-Net official documentation [Integrating Kubernetes via the Addon](https://www.weave.works/docs/net/latest/kubernetes/kube-addon/)
+- Cilium official documentation [Installation using Helm](https://docs.cilium.io/en/stable/gettingstarted/k8s-install-helm/#installation-using-helm)
 
 ## UI Token
 ```bash
@@ -40,8 +43,15 @@ token:      eyJhbGciOiJSUzI1NiIsImtpZCI6InFlblVEUVp0S21vQjdRTHdVLW1pVUFVclJlbHBi
 
 By default we open the port 9090 for metrics (Prometheus) and also deploy the CRI-O metric pod on the cluster. If the user desires to update the port it can be configured on the file directly [crio.conf](files/crio.conf).
 
-## Important information regarding kubernetes config
+## Important information regarding network config
 -------------------------------------------------
+```bash
+kubectl --kubeconfig kubernetes-playbooks/.kube/config describe apiservice v1beta1.metrics.k8s.io
+```
+
+
+## Important information regarding kubernetes config
+----------------------------------------------------
 
 If the user desires to view current kubeadm configurations (from kubeadm init) in order to shape the kubeadm-config file.
 

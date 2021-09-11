@@ -5,6 +5,7 @@ mount:
   - { src: "none", path: "none", fstype: "swap", state: "present" }
 
 kubernetes:
+  controlPlanePort: "6443"
   socket:
     crio: "unix:///var/run/crio/crio.sock"
     containerd: "/var/run/containerd/containerd.sock"
@@ -15,11 +16,11 @@ kubernetes:
       mode: "0755"
   networkElement:
     calico:
-      range: "10.85.0.0/16"
-    flannel:
-      range: "10.244.0.0/16"
+      range: "10.85.0.0/16" # do not modify
+    cilium:
+      range: "10.85.0.0/16" # do not modify
     weavenet:
-      range: "10.200.0.0/16"
+      range: "10.85.0.0/16" # do not modify
       passwordFileName: "weave-passwd"
       passwordFilePath: "/var/lib/weave"
   modules:
@@ -62,5 +63,5 @@ crio:
 
 kubectl:
   proxy:
-    port: 8001
-    ip: '0.0.0.0'
+    port: "8001"
+    ip: "0.0.0.0"

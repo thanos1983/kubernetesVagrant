@@ -11,6 +11,7 @@
 
 - name: Create dashboard and cluster role usser with permissions
   ansible.builtin.include_tasks: dashboard.yml
+  tags: [ never ]
 
 - name: Apply metrics for the cluster
   ansible.builtin.include_tasks: metrics.yml
