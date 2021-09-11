@@ -4,4 +4,4 @@ kubernetesConfigurations:
     minor: "1"
   socket: "crio" # crio or containerd
   operatingSystem: "xUbuntu_20.04"
-  networkElement: "calico" # calico, flannel or weavenet
+  networkElement: "cilium" # calico, weavenet or cilium

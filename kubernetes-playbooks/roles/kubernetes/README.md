@@ -6,9 +6,11 @@ This role is intented to contain all k8s tasks that we will apply on this role.
 Requirements
 ------------
 
-It is necessary for the user to install the following ansible packages:
+It is necessary for the user to install the following python packages:
 - k8s
 - openshift
+- netaddr
+- ansible
 
 Role Variables
 --------------
@@ -27,12 +29,13 @@ This playbook is intented to be used by other roles so no documentation on this 
 
 ## Network Elements
 ----------------
-- Calico documentation [Quickstart for Calico on Kubernetes](https://docs.projectcalico.org/getting-started/kubernetes/quickstart)
+- Calico official documentation [Quickstart for Calico on Kubernetes](https://docs.projectcalico.org/getting-started/kubernetes/quickstart)
 - Weave-Net official documentation [Integrating Kubernetes via the Addon](https://www.weave.works/docs/net/latest/kubernetes/kube-addon/)
+- Cilium official documentation [Installation using Helm](https://docs.cilium.io/en/stable/gettingstarted/k8s-install-helm/#installation-using-helm)
 
 ## UI Token
 ```bash
-token:      eyJhbGciOiJSUzI1NiIsImtpZCI6IjJOYWhYZVB1RzZWcVA3MFc0UDNnNEg2cjd2a0tpV0lnendISUMtN1FoWDAifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJhZG1pbi11c2VyLXRva2VuLTR6dGN0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImFkbWluLXVzZXIiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiIzYjc1MmE0OC05M2Q3LTRkMTItODZhMS04NTQxYzc2YWUwNWIiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6a3ViZXJuZXRlcy1kYXNoYm9hcmQ6YWRtaW4tdXNlciJ9.UV2tjDBC91aTGZxnVWNdmoMtE0G0e-8dsQ4p0SCWP44eeJLrytL0cMZQOkh1BauyEY907y_iJuhymx8YVlu6gmuEybbpkV1mEbExkBCd_S3v6wxDlaSWn4msJ_MsaSXxHNjfjZ1eUfGNox851jufgRIzKLqh_3jQ4du3hkc3SDjwGMJO3K2ngeh1JJu50405L1y8_fhqGzPYtUa2atZzXD5ZlBAYX2PXP3QSxC4f_oDbvAVudZ-ptbcjd_T8VC74PHjwvhUNhlbp_xwnHns2KE2dFvVMWoONcGkysuSSljXwptVEax-8IHvs22s2u-9kmhTvueeJKqyv8wwFO9Wd7Q
+token:      eyJhbGciOiJSUzI1NiIsImtpZCI6InFlblVEUVp0S21vQjdRTHdVLW1pVUFVclJlbHBicWREU0JPNldxZWg1dFUifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJhZG1pbi11c2VyLXRva2VuLTh2OGhxIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImFkbWluLXVzZXIiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiJmMDQ1NGU4YS02ZmU1LTRlYmUtODM4YS00NDMzZTZhZTg4ZmIiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6a3ViZXJuZXRlcy1kYXNoYm9hcmQ6YWRtaW4tdXNlciJ9.Ous9MdEF4FPXv82fxyWdeJP_1gc2812jIBqhhaOIzU95hWi49aibNzDzIIiovH5nKa7I24XjaP6fUrWDtf-I_DNQskqQ9oBpan0LPMaLqIhpjMbA8a7Dk88E9MmvVd8tIG8kGZ7m2CkMOiptcn-pJpUC93ntLMwsuRq_yqgO-JLd-2iCalOrV7aIAtbIu2ID6d8PDOFkogUgK80Er-v9xo77TKGrQ6ivKW1PdaWp_cqziUaaMXPYBhxgoaJoq4ROB-mIB_uk4cYLRocv0_N2ZbLRG7V0cVXi5RLHa2Pb22EBMyVLz24C3mdA5KN5NwB_Uq4QchkaJe_NfZ7V5TLgRg
 ```
 
 ## CRI-O
@@ -40,8 +43,15 @@ token:      eyJhbGciOiJSUzI1NiIsImtpZCI6IjJOYWhYZVB1RzZWcVA3MFc0UDNnNEg2cjd2a0tp
 
 By default we open the port 9090 for metrics (Prometheus) and also deploy the CRI-O metric pod on the cluster. If the user desires to update the port it can be configured on the file directly [crio.conf](files/crio.conf).
 
-## Important information regarding kubernetes config
+## Important information regarding network config
 -------------------------------------------------
+```bash
+kubectl --kubeconfig kubernetes-playbooks/.kube/config describe apiservice v1beta1.metrics.k8s.io
+```
+
+
+## Important information regarding kubernetes config
+----------------------------------------------------
 
 If the user desires to view current kubeadm configurations (from kubeadm init) in order to shape the kubeadm-config file.
 

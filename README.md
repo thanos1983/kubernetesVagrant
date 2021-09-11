@@ -37,6 +37,12 @@ The user should install the following packages:
 - Vagrant
 - Kubectl (relevent to the version of the kubernetes)
 
+It is necessary for the user to install the following python packages:
+- k8s
+- openshift
+- netaddr
+- ansible
+
 Sample kubectl version for client only:
 
 ```bash

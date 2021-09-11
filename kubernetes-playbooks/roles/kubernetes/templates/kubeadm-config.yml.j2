@@ -1,18 +1,16 @@
-apiVersion: kubeadm.k8s.io/v1beta3
+apiVersion: kubeadm.k8s.io/v1beta2
 kind: InitConfiguration
 localAPIEndpoint:
   advertiseAddress: {{ node_ip }}
-  bindPort: 6443
+  bindPort: {{ kubernetes.controlPlanePort }}
 nodeRegistration:
   criSocket: {{ kubernetes.socket[kubernetesConfigurations.socket] }}
-  name: node
-  taints: null
+  name: {{ ansible_hostname }}
+  taints:
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/master
 ---
 apiServer:
-  timeoutFoirControlPlane: 2m0s
-  extraArgs:
-    authorization-mode: Node,RBAC
-    insecure-port: "0"
   certSANs:
   - {{ ansible_hostname }}
 {% for ind in range(0, ( number_of_nodes )) %}
@@ -21,7 +19,11 @@ apiServer:
   - k8s-client-{{ ind }}
 {% endif %}
 {% endfor %}
-apiVersion: kubeadm.k8s.io/v1beta3
+  extraArgs:
+    authorization-mode: Node,RBAC
+    insecure-port: "0"
+  timeoutForControlPlane: 2m0s
+apiVersion: kubeadm.k8s.io/v1beta2
 certificatesDir: /etc/kubernetes/pki
 clusterName: kubernetes
 controllerManager: {}
@@ -30,14 +32,22 @@ dns:
 etcd:
   local:
     dataDir: /var/lib/etcd
+controlPlaneEndpoint: {{ node_ip }}:{{ kubernetes.controlPlanePort }}
 imageRepository: k8s.gcr.io
 kind: ClusterConfiguration
 kubernetesVersion: {{ kubernetesConfigurations.version.major }}.{{ kubernetesConfigurations.version.minor }}
 networking:
   dnsDomain: cluster.local
+  disableDefaultCNI: true
   podSubnet: {{ kubernetes.networkElement[kubernetesConfigurations.networkElement].range }}
   serviceSubnet: 10.96.0.0/12
 scheduler: {}
+---
+apiVersion: kubeproxy.config.k8s.io/v1alpha1
+kind: KubeProxyConfiguration
+mode: "ipvs"
+ipvs:
+  strictARP: true
 ---
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration

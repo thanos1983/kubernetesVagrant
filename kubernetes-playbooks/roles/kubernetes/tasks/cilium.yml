@@ -1,0 +1,47 @@
+---
+# tasks file for roles/kubernetes cilium
+- name: Add Cilium chart repo and deploy
+  block:
+    - name: Add cilium chart repo
+      community.kubernetes.helm_repository:
+        name: cilium
+        repo_url: "https://helm.cilium.io/"
+
+    - name: Deploy cilium chart inside kube-system namespace (and create it)
+      community.kubernetes.helm:
+        name: "cilium"
+        chart_ref: "cilium/cilium"
+        chart_version: "1.10.4"
+        release_namespace: "kube-system"
+        create_namespace: true
+        kubeconfig: "{{ playbook_dir }}/.kube/config"
+  become: false
+  connection: local
+  delegate_to: localhost
+
+- name: Download cilium client
+  ansible.builtin.get_url:
+    checksum: "sha256:https://github.com/cilium/cilium-cli/releases/latest/download/cilium-linux-amd64.tar.gz.sha256sum"
+    url: "https://github.com/cilium/cilium-cli/releases/latest/download/cilium-linux-amd64.tar.gz"
+    dest: /tmp
+
+- name: Unarchive cilium client
+  ansible.builtin.unarchive:
+    src: "/tmp/cilium-linux-amd64.tar.gz"
+    dest: "/usr/local/bin"
+    remote_src: yes
+
+- name: Remove cilium tar file
+  ansible.builtin.file:
+    path: "/tmp/cilium-linux-amd64.tar.gz"
+    state: absent
+
+- name: Wait until cilium has started properly
+  ansible.builtin.shell:
+    cmd: "cilium status --wait"
+  tags: [ never ]
+
+- name: Run cilium tests
+  ansible.builtin.shell:
+    cmd: "cilium connectivity test"
+  tags: [ never ]
