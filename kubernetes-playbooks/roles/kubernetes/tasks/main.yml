@@ -10,6 +10,7 @@
   ansible.builtin.copy:
     src: 11-cgroups.conf
     dest: /etc/systemd/system/kubelet.service.d/11-cgroups.conf
+  tags: [ never ]
 
 - name: Restart kubelet
   ansible.builtin.service:

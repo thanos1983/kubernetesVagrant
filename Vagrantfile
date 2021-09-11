@@ -19,9 +19,6 @@ Vagrant.configure("2") do |config|
         v.cpus = 2
     end
 
-    # temporary for dashboard
-    # config.vm.network "forwarded_port", guest: 8001, host: 8001
-
     config.vm.define "k8s-master" do |master|
         master.vm.box = IMAGE_NAME
         master.vm.network "private_network", ip: "192.168.50.10"

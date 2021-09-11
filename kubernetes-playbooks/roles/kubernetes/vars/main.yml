@@ -17,7 +17,7 @@ kubernetes:
     calico:
       range: "10.85.0.0/16"
     flannel:
-      range: "10.85.0.0/16"
+      range: "10.244.0.0/16"
     weavenet:
       range: "10.200.0.0/16"
       passwordFileName: "weave-passwd"

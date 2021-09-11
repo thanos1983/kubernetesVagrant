@@ -6,9 +6,9 @@
   register: join_command
 
 - name: Copy join command to local
-  become: false
   ansible.builtin.copy:
-    content: "{{ join_command.stdout_lines[0] }}"
-    dest: "{{ role_path }}/files/join-command.sh --cri-socket {{ kubernetes.socket[kubernetesConfigurations.socket] }}"
+    content: "{{ join_command.stdout_lines[0] }} --cri-socket {{ kubernetes.socket[kubernetesConfigurations.socket] }}"
+    dest: "{{ role_path }}/files/join-command.sh"
+  become: false
   connection: local
   delegate_to: localhost
