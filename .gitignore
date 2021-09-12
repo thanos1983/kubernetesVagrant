@@ -364,4 +364,4 @@ MigrationBackup/
 join-command.sh
 
 # Ignore Visual Studio files
-**/.DS_Store
+.DS_Store
