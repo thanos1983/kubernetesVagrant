@@ -2,7 +2,7 @@
 # tasks file for roles/master main
 - name: Ubuntu kubernetes procedure
   ansible.builtin.include_role:
-    name: ubuntu
+    name: "{{ kubernetesConfigurations.operatingSystem }}"
 
 - name: Define node as Master
   ansible.builtin.include_role:

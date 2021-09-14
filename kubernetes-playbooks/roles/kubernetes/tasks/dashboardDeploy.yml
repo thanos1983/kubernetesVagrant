@@ -6,17 +6,39 @@
       ansible.builtin.shell:
         cmd: kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.3.1/aio/deploy/recommended.yaml
 
+    - name: Wait till Dashboard pod is Running
+      community.kubernetes.k8s_info:
+        kind: Pod
+        wait: yes
+        name: kubernetes-dashboard
+        namespace: kubernetes-dashboard
+        wait_sleep: 10
+        wait_timeout: 60
+        kubeconfig: "{{ playbook_dir }}/.kube/config"
+      connection: local
+      delegate_to: localhost
+
     - name: Launch kubectl proxy (detatched)
       ansible.builtin.shell:
         cmd: "nohup kubectl proxy --address {{ kubectl.proxy.ip }} --port {{ kubectl.proxy.port }} --accept-hosts '.*' &"
 
+    - name: Wait for port "{{ kubectl.proxy.port }}" to become open on the host, don't start checking for 10 seconds timeout 60
+      ansible.builtin.wait_for:
+        port: "{{ kubectl.proxy.port }}"
+        host: "{{ ansible_hostname }}"
+        delay: 10
+        timeout: 60
+      tags: [ never ]
+
     - name: Gather facts on listening ports
       listen_ports_facts:
+      tags: [ never ]
 
     - name: Validate that the dashboard port is listening
       ansible.builtin.fail:
         msg: "Check that kubectl proxy is running on '{{ ansible_hostname }}' and listens on port '{{ kubectl.proxy.port }}'"
       when: "kubectl.proxy.port not in ansible_facts.tcp_listen | map(attribute='port') | sort | list"
+      tags: [ never ]
 
     - name: Validate that the dashboard url is accessible max 50 sec
       ansible.builtin.uri:
