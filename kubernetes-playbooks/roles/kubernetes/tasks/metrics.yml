@@ -6,14 +6,6 @@
       ansible.builtin.shell:
         cmd: kubectl --kubeconfig {{ playbook_dir }}/.kube/config apply -f https://raw.githubusercontent.com/cri-o/cri-o/main/contrib/metrics-exporter/cluster.yaml
       when: kubernetesConfigurations.socket == "crio"
-      # tags: [ never ]
-
-    - name: Apply CRI-O metrics if choosen as a socket
-      community.kubernetes.k8s:
-        kubeconfig: "{{ playbook_dir }}/.kube/config"
-        src: "{{ role_path }}/files/cluster.yml"
-        state: present
-      when: kubernetesConfigurations.socket == "crio"
 
     - name: Remove Metrics Deployment file if previously downloaded
       ansible.builtin.file:
