@@ -1,2 +1,41 @@
 ---
-# vars file for roles/ingress
+# vars file for roles/kuberneites
+app: 'sample-nginx' # low case
+version: 'v0.0.1'
+
+domain:
+  url: '{{ app }}.my.private.domain.com' # do not modify
+
+kubernetes:
+  content: 'something'
+
+kubeadm:
+  cluster:
+    namespace: 'sample'
+  clusterRoleUser:
+    name: 'admin-user'
+    namespace: 'kubernetes-dashboard'
+
+ingress:
+  metadata:
+    name: 'ingress-{{ app }}'
+    namespace: '{{ kubeadm.cluster.namespace }}'
+  spec:
+    defaultBackend:
+      service:
+        name: 'ngnix-service'
+        port:
+          number: 80
+    tls:
+      hosts: '{{ domain.url }}'
+    rules:
+      host: '{{ domain.url }}'
+      http:
+        paths:
+          path: '/'
+          pathType: 'Prefix'
+          backend: 
+            service: 
+              name: 'ngnix-service'
+              port:
+                number: 80

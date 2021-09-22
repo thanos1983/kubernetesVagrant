@@ -1,2 +1,4 @@
 ---
-# tasks file for roles/ingress
+# tasks file for roles/ingress main
+- name: Install Metallb
+  ansible.builtin.include_tasks: metallb.yml

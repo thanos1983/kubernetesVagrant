@@ -1,7 +1,7 @@
 kubernetesConfigurations:
   version:
     major: "1.21"
-    minor: "4"
+    minor: "5"
   socket: "crio" # crio or containerd
   operatingSystem: "xUbuntu_20.04"
   networkElement: "calico" # calico, weavenet or cilium
