@@ -9,6 +9,19 @@ domain:
 kubernetes:
   content: 'something'
 
+cert:
+  country_name: DK
+  email_address: garyfalos@cpan.org
+  organization_name: JustForFun
+
+nodePortPorts:
+  http:
+    after: 'appProtocol: http$'
+    line: '      nodePort: 30080'
+  https:
+    after: 'appProtocol: https$'
+    line: '      nodePort: 30443'
+
 kubeadm:
   cluster:
     namespace: 'sample'

@@ -1,0 +1,26 @@
+---
+# tasks file for roles/kubernetes cert
+- name: Generate an OpenSSL private key with the default values (4096 bits, RSA)
+  community.crypto.openssl_privatekey:
+    path: "{{ role_path }}/files/sample.com.pem"
+
+- name: Generate an OpenSSL CSR with subjectAltName extension with dynamic list
+  community.crypto.openssl_csr:
+    path: "{{ role_path }}/files/sample.com.csr"
+    privatekey_path: "{{ role_path }}/files/sample.com.pem"
+    country_name: "{{ cert.country_name }}"
+    organization_name: "{{ cert.organization_name }}"
+    email_address: "{{ cert.email_address }}"
+    common_name: "{{ ansible_hostname }}"
+    # subject_alt_name: "{{ item.value | map('regex_replace', '^', 'DNS:') | list }}"
+  with_dict:
+    dns_server:
+    - "my.private.domain.com"
+    - "*.my.private.domain.com"
+
+- name: Generate a Self Signed OpenSSL certificate
+  community.crypto.x509_certificate:
+    path: "{{ role_path }}/files/sample.com.crt"
+    privatekey_path: "{{ role_path }}/files/sample.com.pem"
+    csr_path: "{{ role_path }}/files/sample.com.csr"
+    provider: selfsigned

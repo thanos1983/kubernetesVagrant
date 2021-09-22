@@ -1,4 +1,4 @@
 ---
 # tasks file for roles/ingress main
-- name: Install Metallb
-  ansible.builtin.include_tasks: metallb.yml
+- name: Install Ingress Contrroller
+  ansible.builtin.include_tasks: {{ kubernetesConfigurations.ingressController }}.yml
