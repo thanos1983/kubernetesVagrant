@@ -9,6 +9,11 @@
 - name: Apply network element for the cluster
   ansible.builtin.include_tasks: "{{ kubernetesConfigurations.networkElement }}.yml"
 
+- name: Ingress contrroller Processes
+  ansible.builtin.include_role:
+    name: ingress
+    tasks_from: "{{ kubernetesConfigurations.ingressController }}.yml"
+
 - name: Create dashboard and cluster role usser with permissions
   ansible.builtin.include_tasks: dashboard.yml
 

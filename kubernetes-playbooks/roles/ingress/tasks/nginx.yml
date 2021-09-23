@@ -1,11 +1,12 @@
 ---
-# tasks file for roles/ingress ingress
+# tasks file for roles/ingress nginx
 - name: Deploy NGINX controller
   block:
     - name: Install Helm Diff
       kubernetes.core.helm_plugin:
         state: present
         plugin_path: https://github.com/databus23/helm-diff
+      tags: [ never ]
 
     - name: Remove Ingress Controller file if existed
       ansible.builtin.file:
@@ -14,21 +15,14 @@
 
     - name: Get Ingress Controller
       ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.0.0/deploy/static/provider/baremetal/deploy.yaml
+        url: https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/baremetal/deploy.yaml
         dest: "{{ role_path }}/files/nginx.yml"
 
-    - name: Update the ingress controller file with the parameters
-      blockinfile:
+    - name: Modify service type from NodePort to Loadbalancer
+      ansible.builtin.replace:
         path: "{{ role_path }}/files/nginx.yml"
-        marker: "# {mark} Node restriction"
-        insertafter: "dnsPolicy: ClusterFirst"
-        block: |2
-                nodeSelector:
-                  "node-role.kubernetes.io/ingress": "true"
-                tolerations:
-                - key: "dedicated"
-                  operator: "Equal"
-                  value: "ingress-controller"
+        regexp: "type: NodePort$"
+        replace: "type: LoadBalancer"
 
     - name: Add nodePort configurations
       ansible.builtin.lineinfile:
@@ -42,13 +36,7 @@
         state: present
         src: nginx.yml
         kubeconfig: "{{ playbook_dir }}/.kube/config"
-
-    - name: Label specific node(s) for dedicated ingress controller node(s)
-      ansible.builtin.shell:
-        cmd: |
-          # kubectl --kubeconfig {{ playbook_dir }}/.kube/config label nodes {{ ansible_hostname }} node-role.kubernetes.io/worker-
-          kubectl --kubeconfig {{ playbook_dir }}/.kube/config label nodes {{ ansible_hostname }} node-role.kubernetes.io/ingress="true"
-          kubectl --kubeconfig {{ playbook_dir }}/.kube/config taint nodes {{ ansible_hostname }} dedicated=ingress-controller
+      tags: [ never ]
   become: false
   connection: local
   delegate_to: localhost

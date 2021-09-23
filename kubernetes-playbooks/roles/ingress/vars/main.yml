@@ -3,8 +3,14 @@
 app: 'sample-nginx' # low case
 version: 'v0.0.1'
 
+ports:
+  http: '30080'
+  https: '30443'
+
 domain:
+  urlPrefix: 'http'
   url: '{{ app }}.my.private.domain.com' # do not modify
+  validation_content: 'Welcome to nginx!' # case sensitive
 
 kubernetes:
   content: 'something'
@@ -17,10 +23,16 @@ cert:
 nodePortPorts:
   http:
     after: 'appProtocol: http$'
-    line: '      nodePort: 30080'
+    line: '      nodePort: {{ ports.http }}'
   https:
     after: 'appProtocol: https$'
-    line: '      nodePort: 30443'
+    line: '      nodePort: {{ ports.https }}'
+  trafficPolicy:
+    after: 'type: LoadBalancer$'
+    line: '  externalTrafficPolicy: Local'
+  comment:
+    after: 'type: LoadBalancer$'
+    line: '  # so we can preserve source IP address'
 
 kubeadm:
   cluster:
