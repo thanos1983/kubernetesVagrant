@@ -1,0 +1,9 @@
+---
+# tasks file for roles/kubernetes namespace
+- name: Create Namespace "{{ ingress.metadata.namespace }}"
+  community.kubernetes.k8s:
+    name: "{{ ingress.metadata.namespace }}"
+    api_version: v1
+    kind: Namespace
+    state: present
+    kubeconfig: "{{ playbook_dir }}/.kube/config"
