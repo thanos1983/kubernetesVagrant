@@ -1,0 +1,5 @@
+---
+# vars file for roles/worker
+role:
+  labels:
+    - 'worker="true"'

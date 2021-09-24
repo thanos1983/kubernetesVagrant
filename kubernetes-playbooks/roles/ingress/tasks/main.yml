@@ -1,7 +1,2 @@
 ---
 # tasks file for roles/ingress main
-- name: Label specific nodes for dedicated ingress controller nodes
-  ansible.builtin.shell:
-    cmd: |
-      kubectl label nodes {{ item }}.{{ ansible_facts.dns.domain }} node-role.kubernetes.io/worker="true"
-      # kubectl taint nodes {{ item }}.{{ ansible_facts.dns.domain }} dedicated=ingress-controller:PreferNoSchedule

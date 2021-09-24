@@ -17,10 +17,12 @@
         kubeconfig: "{{ playbook_dir }}/.kube/config"
       connection: local
       delegate_to: localhost
+      tags: [ never ]
 
     - name: Launch kubectl proxy (detatched)
       ansible.builtin.shell:
         cmd: "nohup kubectl proxy --address {{ kubectl.proxy.ip }} --port {{ kubectl.proxy.port }} --accept-hosts '.*' &"
+      tags: [ never ]
 
     - name: Wait for port "{{ kubectl.proxy.port }}" to become open on the host, don't start checking for 10 seconds timeout 60
       ansible.builtin.wait_for:
@@ -51,4 +53,5 @@
       failed_when:
         - dashboard.status != 200
         - "'Kubernetes Dashboard' not in dashboard.content"
+      tags: [ never ]
   become: false

@@ -271,7 +271,7 @@ metadata:
   name: ingress-nginx-controller
   namespace: ingress-nginx
 spec:
-  type: LoadBalancer
+  type: NodePort
   ports:
     - name: http
       port: 80
@@ -673,3 +673,5 @@ spec:
       securityContext:
         runAsNonRoot: true
         runAsUser: 2000
+  externalTrafficPolicy: Local
+  # so we can preserve source IP address

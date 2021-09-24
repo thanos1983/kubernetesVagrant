@@ -1,0 +1,36 @@
+---
+# tasks file for roles/master kubernetesMaster
+- name: Launch master node
+  ansible.builtin.include_role:
+    name: kubernetes
+    tasks_from: kubeadm.yml
+
+- name: Apply kube configurations from remote and local
+  ansible.builtin.include_role:
+    name: kubernetes
+    tasks_from: kubeConfig.yml
+
+- name: Apply network element for the cluster
+  ansible.builtin.include_role:
+    name: kubernetes
+    tasks_from: "{{ kubernetesConfigurations.networkElement }}.yml"
+
+- name: Ingress contrroller Processes
+  ansible.builtin.include_role:
+    name: ingress
+    tasks_from: "{{ kubernetesConfigurations.ingressController }}.yml"
+
+- name: Create dashboard and cluster role usser with permissions
+  ansible.builtin.include_role:
+    name: kubernetes
+    tasks_from: dashboard.yml
+
+- name: Apply metrics for the cluster
+  ansible.builtin.include_role:
+    name: kubernetes
+    tasks_from: metrics.yml
+
+- name: Create Join Script for Client
+  ansible.builtin.include_role:
+    name: kubernetes
+    tasks_from: joinCommand.yml

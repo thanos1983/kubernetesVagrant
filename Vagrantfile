@@ -22,8 +22,6 @@ Vagrant.configure("2") do |config|
     config.vm.define "k8s-master" do |master|
         master.vm.box = IMAGE_NAME
         master.vm.network "private_network", ip: "192.168.50.10"
-        # temporary for dashboard
-        master.vm.network "forwarded_port", guest: 8001, host: 8001
         master.vm.hostname = "k8s-master"
         master.vm.provision "shell", inline: $script
         master.vm.provision "ansible" do |ansible|
@@ -44,7 +42,7 @@ Vagrant.configure("2") do |config|
             node.vm.provision "shell", inline: $script
             node.vm.provision "ansible" do |ansible|
                 ansible.compatibility_mode = "2.0"
-                ansible.playbook = "kubernetes-playbooks/client-playbook.yml"
+                ansible.playbook = "kubernetes-playbooks/worker-playbook.yml"
                 ansible.extra_vars = {
                     node_ip: "192.168.50.#{i + 10}"
                 }

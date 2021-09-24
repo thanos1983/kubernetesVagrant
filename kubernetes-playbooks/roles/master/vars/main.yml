@@ -1,5 +1,9 @@
 ---
 # vars file for roles/master
+role:
+  labels:
+    - 'control-plane-'
+
 kubeadm:
   cluster:
     namespace: 'kubeless'

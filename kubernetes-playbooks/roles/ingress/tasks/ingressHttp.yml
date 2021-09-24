@@ -1,8 +1,8 @@
 ---
 # tasks file for roles/kubernetes ingressHttp
-- name: Ingress default backend deployment with 'nginx' at 'sample' namespace
+- name: Ingress deployment with 'nginx' at '{{ ingress.metadata.namespace }}' namespace
   community.kubernetes.k8s:
-    state: "{{ serviceState | default('present') }}"
+    state: "{{ ingressState | default('present') }}"
     kubeconfig: "{{ playbook_dir }}/.kube/config"
     definition:
       apiVersion: networking.k8s.io/v1

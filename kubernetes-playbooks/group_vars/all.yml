@@ -4,5 +4,5 @@ kubernetesConfigurations:
     minor: "5"
   socket: "crio" # crio or containerd
   operatingSystem: "xUbuntu_20.04"
-  networkElement: "calico" # calico, weavenet or cilium
-  ingressController: "nginx" # nginx or haproxy
+  networkElement: "cilium" # calico, weavenet or cilium
+  ingressController: "haproxy" # nginx or haproxy
