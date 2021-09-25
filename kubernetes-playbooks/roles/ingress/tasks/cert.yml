@@ -15,8 +15,8 @@
     subject_alt_name: "{{ item.value | map('regex_replace', '^', 'DNS:') | list }}"
   with_dict:
     dns_server:
-    - "my.private.domain.com"
-    - "*.my.private.domain.com"
+    - "{{ kubernetesConfigurations.domain }}"
+    - "*.{{ kubernetesConfigurations.domain }}"
 
 - name: Generate a Self Signed OpenSSL certificate
   community.crypto.x509_certificate:

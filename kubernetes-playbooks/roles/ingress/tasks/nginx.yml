@@ -15,8 +15,7 @@
 
     - name: Get Ingress Controller
       ansible.builtin.get_url:
-        # url: https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/baremetal/deploy.yaml
-        url: https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.0.1/deploy/static/provider/baremetal/deploy.yaml
+        url: https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/baremetal/deploy.yaml
         dest: "{{ role_path }}/files/nginx.yml"
 
     - name: Modify service type from NodePort to Loadbalancer
@@ -30,7 +29,7 @@
         path: "{{ role_path }}/files/nginx.yml"
         insertafter: "{{ item.after }}"
         line: "{{ item.line }}"
-      loop: "{{ nodePortPorts.values() | flatten }}"
+      loop: "{{ nodePortPorts[kubernetesConfigurations.ingressController].values() | flatten }}"
 
     - name: Deploy Ingress Controller
       community.kubernetes.k8s:

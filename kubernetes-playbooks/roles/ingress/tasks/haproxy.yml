@@ -1,6 +1,6 @@
 ---
 # tasks file for roles/ingress nginx
-- name: Deploy NGINX controller
+- name: Deploy HaProxy controller
   block:
     - name: Install Helm Diff
       kubernetes.core.helm_plugin:
@@ -15,7 +15,7 @@
 
     - name: Get Ingress Controller
       ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/haproxytech/kubernetes-ingress/master/deploy/haproxy-ingress.yaml
+        url: https://raw.githubusercontent.com/haproxytech/kubernetes-ingress/master/deploy/haproxy-ingress-daemonset.yaml
         dest: "{{ role_path }}/files/haproxy.yml"
 
     - name: Modify service type from NodePort to Loadbalancer

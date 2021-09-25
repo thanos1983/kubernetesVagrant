@@ -11,7 +11,7 @@ ports:
 
 domain:
   urlPrefix: 'http'
-  url: '{{ app }}.my.k8s.cluster.com' # do not modify
+  url: '{{ app }}.{{ kubernetesConfigurations.domain }}' # do not modify
   validation_content: 'Welcome to nginx!' # case sensitive
 
 cert:
