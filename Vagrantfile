@@ -34,23 +34,7 @@ Vagrant.configure("2") do |config|
         end
     end
 
-    config.vm.define "k8s-client-1" do |ingress|
-        ingress.vm.box = IMAGE_NAME
-        ingress.vm.network "private_network", ip: "192.168.50.11"
-        ingress.vm.network "forwarded_port", guest: 30080, host: 30080
-        ingress.vm.network "forwarded_port", guest: 30443, host: 30443
-        ingress.vm.hostname = "k8s-client-1"
-        ingress.vm.provision "shell", inline: $script
-        ingress.vm.provision "ansible" do |ansible|
-            ansible.compatibility_mode = "2.0"
-            ansible.playbook = "kubernetes-playbooks/worker-playbook.yml"
-            ansible.extra_vars = {
-                node_ip: "192.168.50.11"
-            }
-        end
-    end
-
-    (2..N).each do |i|
+    (1 .. N - 1).each do |i|
         config.vm.define "k8s-client-#{i}" do |worker|
             worker.vm.box = IMAGE_NAME
             worker.vm.network "private_network", ip: "192.168.50.#{i + 10}"
@@ -63,6 +47,22 @@ Vagrant.configure("2") do |config|
                     node_ip: "192.168.50.#{i + 10}"
                 }
             end
+        end
+    end
+
+    config.vm.define "k8s-client-#{N}" do |ingress|
+        ingress.vm.box = IMAGE_NAME
+        ingress.vm.network "private_network", ip: "192.168.50.#{N + 10}"
+        ingress.vm.network "forwarded_port", guest_ip: "192.168.50.#{N + 10}", guest: 30080, host: 30080
+        ingress.vm.network "forwarded_port", guest_ip: "192.168.50.#{N + 10}", guest: 30443, host: 30443
+        ingress.vm.hostname = "k8s-client-#{N}"
+        ingress.vm.provision "shell", inline: $script
+        ingress.vm.provision "ansible" do |ansible|
+            ansible.compatibility_mode = "2.0"
+            ansible.playbook = "kubernetes-playbooks/worker-playbook.yml"
+            ansible.extra_vars = {
+                node_ip: "192.168.50.#{N + 10}"
+            }
         end
     end
 end
