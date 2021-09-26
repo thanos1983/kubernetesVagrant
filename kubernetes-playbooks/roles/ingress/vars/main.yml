@@ -1,26 +1,12 @@
 ---
 # vars file for roles/ingress
-app: 'webserver' # low case
-version: 'v0.0.1'
-component: 'frontend'
-managed_by: 'k8s'
+url:
+  haproxy: 'https://raw.githubusercontent.com/haproxytech/kubernetes-ingress/master/deploy/haproxy-ingress.yaml'
+  nginx: 'https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/baremetal/deploy.yaml'
 
 ports:
   http: '30080'
   https: '30443'
-
-domain:
-  urlPrefix: 'http'
-  url: '{{ app }}.{{ kubernetesConfigurations.domain }}' # do not modify
-  validation_content: 'Welcome to nginx!' # case sensitive
-
-cert:
-  validation:
-    http: 'no' # due to no CA we need to disable it 
-    https: 'no' # due to self signed CA we need to disable it 
-  country_name: DK
-  email_address: garyfalos@cpan.org
-  organization_name: JustForFun
 
 nodePortPorts:
   nginx:
@@ -49,98 +35,3 @@ nodePortPorts:
     comment:
       after: 'type: LoadBalancer$'
       line: '  # so we can preserve source IP address'
-
-kubeadm:
-  cluster:
-    namespace: 'demo'
-  clusterRoleUser:
-    name: 'admin-user'
-    namespace: 'kubernetes-dashboard'
-
-deployment:
-  metadata:
-    name: 'deployment-{{ app }}'
-    namespace: '{{ kubeadm.cluster.namespace }}'
-    labels:
-      name: '{{ app }}'
-      instance: '{{ app }}'
-      version: '{{ version }}'
-      component: '{{ component }}'
-      managed_by: '{{ managed_by }}'
-  spec:
-    replicas: '2'
-    selector:
-      matchLabels:
-        name: '{{ app }}' 
-        instance: '{{ app }}'
-        component: '{{ component }}'
-    revisionHistoryLimit: 3
-    minReadySeconds: 0
-    template:
-      metadata:
-        labels:
-          name: '{{ app }}'
-          instance: '{{ app }}'
-          component: '{{ component }}'
-      spec:
-        containers:
-          name: '{{ app }}'
-          image: 'nginx'
-          imagePullPolicy: 'IfNotPresent'
-          ports:
-            containerPort: 80
-
-service:
-  metadata:
-    name: 'service-{{ app }}'
-    namespace: '{{ kubeadm.cluster.namespace }}'
-    labels:
-      name: '{{ app }}'
-      instance: '{{ app }}'
-      version: '{{ version }}'
-      component: '{{ component }}'
-      managed_by: '{{ managed_by }}'
-  spec:
-    selector:
-      name: '{{ app }}'
-      instance: '{{ app }}'
-      component: '{{ component }}'
-    ports:
-      name: 'http'
-      port: 80
-      targetPort: 80
-    type: 'ClusterIP'
-
-ingress:
-  metadata:
-    name: 'ingress-{{ app }}'
-    namespace: '{{ kubeadm.cluster.namespace }}'
-    labels:
-      name: '{{ app }}'
-      instance: '{{ app }}'
-      version: '{{ version }}'
-      component: '{{ component }}'
-      managed_by: '{{ managed_by }}'
-  spec:
-    defaultBackend:
-      service:
-        name: '{{ service.metadata.name }}'
-        port:
-          number: 80
-    tls:
-      hosts: '{{ domain.url }}'
-    rules:
-      host: '{{ domain.url }}'
-      http:
-        paths:
-          path: '/'
-          pathType: 'Prefix'
-          backend: 
-            service: 
-              name: '{{ service.metadata.name }}'
-              port:
-                number: 80
-  certfiles:
-    key: 'sample.pem'
-    csr: 'sample.csr'
-    crt: 'sample.crt'

@@ -1,6 +1,6 @@
 ---
 # tasks file for roles/kubernetes dashboard
-- name: Deploy dashboard
+- name: Deploy Dashboard
   ansible.builtin.include_tasks: dashboardDeploy.yml
 
 - name: Create ServiceAccount
@@ -9,5 +9,11 @@
 - name: Create ClusterRoleBinding
   ansible.builtin.include_tasks: clusterRoleBinding.yml
 
-- name: Dashboard token processes
+- name: Dashboard Token processes
   ansible.builtin.include_tasks: dashboardToken.yml
+
+- name: Dashboard TLS CA processes
+  ansible.builtin.include_tasks: dashboardSecret.yml
+
+- name: Create Ingress for Dashboard
+  ansible.builtin.include_tasks: "{{ kubernetesConfigurations.ingressController }}DashboardIngress.yml"

@@ -4,9 +4,22 @@ role:
   labels:
     - 'control-plane-'
 
+domain:
+  urlPrefix: 'https'
+  url: 'dashboard.my.k8s.cluster.com' # do not modify
+  validation_content: 'Kubernetes Dashboard' # case sensitive
+
+cert:
+  validation:
+    http: 'no' # due to no CA we need to disable it 
+    https: 'no' # due to self signed CA we need to disable it 
+  country_name: DK
+  email_address: garyfalos@cpan.org
+  organization_name: JustForFun
+
 kubeadm:
-  cluster:
-    namespace: 'kubeless'
+  # cluster:
+  #  namespace: 'kubeless'
   clusterRoleUser:
     name: 'admin-user'
     namespace: 'kubernetes-dashboard'
@@ -26,3 +39,28 @@ rbac:
       kind: 'ServiceAccount' # User or ServiceAccount
       name: '{{ kubeadm.clusterRoleUser.name }}'
       namespace: '{{ kubeadm.clusterRoleUser.namespace }}'
+
+ingress:
+  metadata:
+    name: 'ingress-{{ kubeadm.clusterRoleUser.namespace }}'
+    namespace: '{{ kubeadm.clusterRoleUser.namespace }}'
+    labels:
+      k8s_app: '{{ kubeadm.clusterRoleUser.namespace }}'
+  spec:
+    tls:
+      hosts: '{{ domain.url }}'
+    rules:
+      host: '{{ domain.url }}'
+      http:
+        paths:
+          path: '/'
+          pathType: 'Prefix'
+          backend: 
+            service: 
+              name: '{{ kubeadm.clusterRoleUser.namespace }}'
+              port:
+                number: 443
+  certfiles:
+    key: 'sample.pem'
+    csr: 'sample.csr'
+    crt: 'sample.crt'

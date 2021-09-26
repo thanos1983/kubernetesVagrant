@@ -1,0 +1,11 @@
+---
+# Kubernetes kubernetes
+- hosts: "{{ target_hosts }}"
+  become: "{{ become_sudo }}"
+  any_errors_fatal: true
+ 
+  roles:
+    - role: master
+      tags: [ master ]
+    - role: worker
+      tags: [ worker ]

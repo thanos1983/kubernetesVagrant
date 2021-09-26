@@ -1,0 +1,17 @@
+---
+# tasks file for roles/demos waitForPods
+- name: Wait until pods in namespace kube-system is running
+  ansible.builtin.shell:
+    cmd: kubectl --kubeconfig {{ playbook_dir }}/.kube/config wait --namespace=kube-system --for=condition=Ready pods --field-selector status.phase=Running --timeout=600s
+  tags: [ never ]
+
+- name: Wait until pods of namespace kube-system is running
+  community.kubernetes.k8s_info:
+    kind: Pod
+    wait: yes
+    # namespace: kube-system
+    wait_sleep: 10
+    wait_timeout: 360
+    kubeconfig: "{{ playbook_dir }}/.kube/config"
+    field_selectors:
+      - status.phase: Running

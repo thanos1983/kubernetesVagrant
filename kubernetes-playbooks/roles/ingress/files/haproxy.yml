@@ -81,8 +81,8 @@ subjects:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: haproxy-configmap
-  namespace: default
+  name: haproxy
+  namespace: haproxy-controller
 data:
 
 ---
@@ -128,13 +128,14 @@ spec:
 
 ---
 apiVersion: apps/v1
-kind: DaemonSet
+kind: Deployment
 metadata:
   labels:
     run: haproxy-ingress
   name: haproxy-ingress
   namespace: haproxy-controller
 spec:
+  replicas: 1
   selector:
     matchLabels:
       run: haproxy-ingress
@@ -148,7 +149,7 @@ spec:
       - name: haproxy-ingress
         image: haproxytech/kubernetes-ingress
         args:
-          - --configmap=default/haproxy-configmap
+          - --configmap=haproxy-controller/haproxy
           - --default-backend-service=haproxy-controller/ingress-default-backend
         securityContext:
           runAsUser:  1000
@@ -169,13 +170,10 @@ spec:
         ports:
         - name: http
           containerPort: 80
-          hostPort: 80
         - name: https
           containerPort: 443
-          hostPort: 443
         - name: stat
           containerPort: 1024
-          hostPort: 1024
         env:
         - name: TZ
           value: "Etc/UTC"
