@@ -3,3 +3,11 @@
 - name: Join client "{{ ansible_hostname }}" in the cluster
   ansible.builtin.script:
     cmd: "{{ role_path }}/files/join-command.sh"
+
+- name: Label node as worker
+  ansible.builtin.shell:
+    cmd: |
+      kubectl --kubeconfig {{ playbook_dir }}/.kube/config label nodes {{ ansible_hostname }} node-role.kubernetes.io/worker="true"
+  become: false
+  connection: local
+  delegate_to: localhost

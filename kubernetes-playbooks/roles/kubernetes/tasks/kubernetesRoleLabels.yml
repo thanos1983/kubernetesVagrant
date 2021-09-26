@@ -1,0 +1,10 @@
+---
+# tasks file for roles/kubernetes kubernetesRoleLabels
+- name: Label specify labels for the node
+  ansible.builtin.shell:
+    cmd: |
+      kubectl --kubeconfig {{ playbook_dir }}/.kube/config label nodes {{ ansible_hostname }} node-role.kubernetes.io/{{ item }}
+  loop: "{{ role.labels }}"
+  become: false
+  connection: local
+  delegate_to: localhost

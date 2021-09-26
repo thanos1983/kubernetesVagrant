@@ -1,13 +1,15 @@
 ---
-# tasks file for roles/master main
+# tasks file for roles/worker main
 - name: Operating System configurations
   ansible.builtin.include_role:
     name: "{{ kubernetesConfigurations.operatingSystem }}"
 
-- name: Define node as Master
-  ansible.builtin.include_tasks: kubernetesMaster.yml
+- name: Define node as Worker
+  ansible.builtin.include_role:
+    name: kubernetes
+    tasks_from: kubernetesWorker
 
-- name: Remove extra label from node
+- name: Label node as worker
   ansible.builtin.include_role:
     name: kubernetes
     tasks_from: kubernetesRoleLabels

@@ -1,0 +1,41 @@
+---
+# tasks file for roles/ingress nginx
+- name: Deploy NGINX controller
+  block:
+    - name: Install Helm Diff
+      kubernetes.core.helm_plugin:
+        state: present
+        plugin_path: https://github.com/databus23/helm-diff
+      tags: [ never ]
+
+    - name: Remove Ingress Controller file if existed
+      ansible.builtin.file:
+        path: "{{ role_path }}/files/nginx.yml"
+        state: absent
+
+    - name: Get Ingress Controller
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/baremetal/deploy.yaml
+        dest: "{{ role_path }}/files/nginx.yml"
+
+    - name: Modify service type from NodePort to Loadbalancer
+      ansible.builtin.replace:
+        path: "{{ role_path }}/files/nginx.yml"
+        regexp: "type: NodePort$"
+        replace: "type: LoadBalancer"
+
+    - name: Add nodePort configurations
+      ansible.builtin.lineinfile:
+        path: "{{ role_path }}/files/nginx.yml"
+        insertafter: "{{ item.after }}"
+        line: "{{ item.line }}"
+      loop: "{{ nodePortPorts[kubernetesConfigurations.ingressController].values() | flatten }}"
+
+    - name: Deploy Ingress Controller
+      community.kubernetes.k8s:
+        state: present
+        src: nginx.yml
+        kubeconfig: "{{ playbook_dir }}/.kube/config"
+  become: false
+  connection: local
+  delegate_to: localhost
