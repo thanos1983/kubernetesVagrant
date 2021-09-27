@@ -1,11 +1,9 @@
 ---
 # Kubernetes kubernetes
-- hosts: "{{ target_hosts }}"
-  become: "{{ become_sudo }}"
+- hosts: localhost
+  connection: local
   any_errors_fatal: true
  
   roles:
-    - role: master
-      tags: [ master ]
-    - role: worker
-      tags: [ worker ]
+    - role: demo
+      tags: [ demo ]

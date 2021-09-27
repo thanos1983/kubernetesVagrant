@@ -2,16 +2,32 @@
 # tasks file for roles/demos waitForPods
 - name: Wait until pods in namespace kube-system is running
   ansible.builtin.shell:
-    cmd: kubectl --kubeconfig {{ playbook_dir }}/.kube/config wait --namespace=kube-system --for=condition=Ready pods --field-selector status.phase=Running --timeout=600s
+    cmd: kubectl --kubeconfig {{ playbook_dir }}/.kube/config wait --all-namespaces --for=condition=Ready pods --field-selector status.phase=Running --timeout=120s
+  register: running_pods
   tags: [ never ]
 
-- name: Wait until pods of namespace kube-system is running
+- name: Debug running pods
+  ansible.builtin.debug:
+    msg: "{{ ruinning_pods.stdout_lines }}"
+  tags: [ never ]
+
+- name: Wait until all pods have status running
   community.kubernetes.k8s_info:
     kind: Pod
     wait: yes
-    # namespace: kube-system
     wait_sleep: 10
-    wait_timeout: 360
+    wait_timeout: 120
+    namespace: kube-system
     kubeconfig: "{{ playbook_dir }}/.kube/config"
+    label_selectors:
+      - k8s-app=calico-node
     field_selectors:
-      - status.phase: Running
+      - status.phase=Running
+  tags: [ never ]
+
+- name: Wait for pods to come up max 2 minutes or fail
+  ansible.builtin.shell:
+    cmd: "kubectl --kubeconfig {{ playbook_dir }}/.kube/config get pods -n kube-system -o json"
+  until: kubectl_get_pods.stdout|from_json|json_query('items[*].status.phase')|unique == ["Running"]
+  retries: 12
+  delay: 10
