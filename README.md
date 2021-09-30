@@ -92,26 +92,38 @@ $ vagrant destroy -f
 Sample of complete cluster with 1 Master nodes and 2 Client nodes:
 
 ```bash
-➜  kubernetesVagrant git:(main) ✗ kubectl --kubeconfig kubernetes-playbooks/.kube/config get nodes  
-NAME           STATUS     ROLES                  AGE     VERSION
-k8s-client-1   Ready      <none>                 3m18s   v1.22.1
-k8s-client-2   NotReady   <none>                 15s     v1.22.1
-k8s-master     Ready      control-plane,master   6m30s   v1.22.1
-➜  kubernetesVagrant git:(main) ✗ kubectl --kubeconfig kubernetes-playbooks/.kube/config get pods -A
-NAMESPACE     NAME                                       READY   STATUS    RESTARTS   AGE
-kube-system   calico-kube-controllers-58497c65d5-rhdpv   1/1     Running   0          13m
-kube-system   calico-node-bnspq                          1/1     Running   0          7m37s
-kube-system   calico-node-mnxgq                          1/1     Running   0          13m
-kube-system   calico-node-n4dhv                          1/1     Running   0          10m
-kube-system   coredns-78fcd69978-qvvwh                   1/1     Running   0          13m
-kube-system   coredns-78fcd69978-xrkpl                   1/1     Running   0          13m
-kube-system   etcd-k8s-master                            1/1     Running   0          13m
-kube-system   kube-apiserver-k8s-master                  1/1     Running   0          13m
-kube-system   kube-controller-manager-k8s-master         1/1     Running   0          13m
-kube-system   kube-proxy-6s8hz                           1/1     Running   0          7m37s
-kube-system   kube-proxy-d4xst                           1/1     Running   0          10m
-kube-system   kube-proxy-ttzln                           1/1     Running   0          13m
-kube-system   kube-scheduler-k8s-master                  1/1     Running   0          13m
+kubectl --kubeconfig kubernetes-playbooks/.kube/config get nodes  
+NAME           STATUS   ROLES    AGE     VERSION
+k8s-master     Ready    master   6m2s    v1.21.5
+k8s-worker-1   Ready    worker   3m46s   v1.21.5
+k8s-worker-2   Ready    worker   107s    v1.21.5
+```
+
+## Sample of pods with Cilium as Network element, NGINX as Ingress Controller and CRI-O as socket:
+```bash
+kubectl --kubeconfig kubernetes-playbooks/.kube/config get pods -A
+NAMESPACE                NAME                                         READY   STATUS      RESTARTS   AGE
+cri-o-metrics-exporter   cri-o-metrics-exporter-64847968cd-2qv9c      1/1     Running     0          6m17s
+ingress-nginx            ingress-nginx-admission-create-dr2vz         0/1     Completed   0          93s
+ingress-nginx            ingress-nginx-admission-patch-xnksn          0/1     Completed   2          93s
+ingress-nginx            ingress-nginx-controller-5486956f45-s8cmx    1/1     Running     0          93s
+kube-system              cilium-2wfpp                                 1/1     Running     0          2m30s
+kube-system              cilium-9f462                                 1/1     Running     0          6m26s
+kube-system              cilium-fs2r4                                 1/1     Running     0          4m29s
+kube-system              cilium-operator-78f45675-8btlp               1/1     Running     0          6m26s
+kube-system              cilium-operator-78f45675-8mlgz               1/1     Running     0          6m26s
+kube-system              coredns-558bd4d5db-b4lv6                     1/1     Running     0          5m24s
+kube-system              coredns-558bd4d5db-h4grm                     1/1     Running     0          5m39s
+kube-system              etcd-k8s-master                              1/1     Running     0          6m36s
+kube-system              kube-apiserver-k8s-master                    1/1     Running     0          6m36s
+kube-system              kube-controller-manager-k8s-master           1/1     Running     0          6m36s
+kube-system              kube-proxy-2zh45                             1/1     Running     0          4m29s
+kube-system              kube-proxy-hnj7k                             1/1     Running     0          6m26s
+kube-system              kube-proxy-whzrq                             1/1     Running     0          2m30s
+kube-system              kube-scheduler-k8s-master                    1/1     Running     0          6m36s
+kube-system              metrics-server-7f64dfcd8b-dw9n9              1/1     Running     0          6m14s
+kubernetes-dashboard     dashboard-metrics-scraper-856586f554-cmxn7   1/1     Running     0          6m26s
+kubernetes-dashboard     kubernetes-dashboard-67484c44f6-xvc5j        1/1     Running     0          6m26s
 ```
 
 ## Kuberenets release notes (versions)
