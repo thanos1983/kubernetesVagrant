@@ -2,9 +2,20 @@
 # tasks file for roles/kubernetes dashboardDeploy
 - name: Deploy Kubernetes Dashboard, create proxy routing and validate
   block:
-    - name: Deploy dashboard pod
-      ansible.builtin.shell:
-        cmd: kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.3.1/aio/deploy/recommended.yaml
+    - name: Download kubernetes dashboard manifest
+      ansible.builtin.get_url:
+        url: "https://raw.githubusercontent.com/kubernetes/dashboard/v2.3.1/aio/deploy/recommended.yaml"
+        dest: "{{ role_path }}/files/recommended.yml"
+      connection: local 
+      delegate_to: localhost
+
+    - name: Deploy kubernetes dashboard
+      community.kubernetes.k8s:
+        state: present
+        src: recommended.yml
+        kubeconfig: "{{ playbook_dir }}/.kube/config"
+      connection: local
+      delegate_to: localhost
 
     - name: Wait till Dashboard pod is Running
       community.kubernetes.k8s_info:

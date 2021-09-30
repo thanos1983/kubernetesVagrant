@@ -37,11 +37,16 @@ The user should install the following packages:
 - Vagrant
 - Kubectl (relevent to the version of the kubernetes)
 
-It is necessary for the user to install the following python packages:
+It is necessary for the user to install the following python3 packages:
 - k8s
 - openshift
 - netaddr
 - ansible
+
+Sample on how to install python3 packages:
+```bash
+python3 -m pip install k8s openshift netaddr -U
+```
 
 Sample kubectl version for client only:
 
@@ -117,11 +122,20 @@ Sample of configuration:
 ```bash
 kubernetesConfigurations:
   version:
-    major: "1.20"
-    minor: "10"
+    major: "1.21"
+    minor: "5"
+  domain: "my.k8s.cluster.com"
   socket: "crio" # crio or containerd
   operatingSystem: "xUbuntu_20.04"
+  networkElement: "cilium" # calico, weavenet or cilium
+  ingressController: "nginx" # nginx or haproxy
 ```
 
 ## Where to find the .kube dir
-The script will automatically download the whole .kube dir so the user will be able to connect to the cluster directly from the directory.
+The script will automatically download the whole .kube dir at `kubernetes-playbooks` dir. The user will be able to connect to the cluster directly from the directory by using `--kubeconfig kubernetes-playbooks/.kube/config <command here>`.
+
+## Serverless Fnctions
+Official documentation can be found here [Fission|https://fission.io/docs/]. The user should be aware that in order to deploy Serverless functionality on the cluster the value true needs to be applied at [group_vars|kubernetes-playbooks/group_vars/all.yml].
+
+## Serverless Client
+The user in order to user serverless functions needs to install serverless client locally also. The official documentation for all Operating Systems (OS) [Install Fission CLI|https://fission.io/docs/installation/#install-fission-cli].

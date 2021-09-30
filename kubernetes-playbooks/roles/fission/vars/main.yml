@@ -1,0 +1,6 @@
+---
+# vars file for roles/fission
+fission:
+  metadata:
+    version: '1.14.1'
+    namespace: 'fission'

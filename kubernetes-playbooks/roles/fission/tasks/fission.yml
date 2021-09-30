@@ -1,0 +1,28 @@
+---
+# tasks file for roles/fission fission
+- name: Add Fission chart repo and deploy
+  block:
+    - name: Create fission crds
+      ansible.builtin.shell:
+        cmd: "kubectl --kubeconfig {{ playbook_dir }}/.kube/config create -k github.com/fission/fission/crds/v1?ref={{ fission.metadata.version }}"
+    
+    - name: Add fission chart repo
+      community.kubernetes.helm_repository:
+        name: fission-charts
+        repo_url: "https://fission.github.io/fission-charts/"
+
+    - name: Deploy fission chart at '{{ fission.metadata.namespace }}' namespace (and create it)
+      community.kubernetes.helm:
+        name: "fission"
+        chart_ref: "fission-charts/fission-all"
+        chart_version: "{{ fission.metadata.version }}"
+        release_namespace: "{{ fission.metadata.namespace }}"
+        create_namespace: true
+        update_repo_cache: true
+        kubeconfig: "{{ playbook_dir }}/.kube/config"
+        values:
+          serviceType: NodePort
+          routerServiceType: NodePort
+  become: false
+  connection: local
+  delegate_to: localhost

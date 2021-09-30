@@ -7,3 +7,4 @@ kubernetesConfigurations:
   operatingSystem: "xUbuntu_20.04"
   networkElement: "cilium" # calico, weavenet or cilium
   ingressController: "nginx" # nginx or haproxy
+  servelessFunctions: false

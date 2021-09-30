@@ -53,8 +53,8 @@ Vagrant.configure("2") do |config|
     config.vm.define "k8s-worker-#{N}" do |ingress|
         ingress.vm.box = IMAGE_NAME
         ingress.vm.network "private_network", ip: "192.168.50.#{N + 10}"
-        ingress.vm.network "forwarded_port", guest: 30080, host: 30080
-        ingress.vm.network "forwarded_port", guest: 30443, host: 30443
+        ingress.vm.network "forwarded_port", guest: 30080, host: 80
+        ingress.vm.network "forwarded_port", guest: 30443, host: 443
         ingress.vm.hostname = "k8s-worker-#{N}"
         ingress.vm.provision "shell", inline: $script
         ingress.vm.provision "ansible" do |ansible|

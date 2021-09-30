@@ -18,8 +18,6 @@ cert:
   organization_name: JustForFun
 
 kubeadm:
-  # cluster:
-  #  namespace: 'kubeless'
   clusterRoleUser:
     name: 'admin-user'
     namespace: 'kubernetes-dashboard'

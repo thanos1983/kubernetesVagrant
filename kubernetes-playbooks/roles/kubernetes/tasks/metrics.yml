@@ -2,9 +2,17 @@
 # tasks file for roles/kubernetes metrics.yml
 - name: Deploy Metrics
   block:
-    - name: Apply CRI-O metrics if choosen as a socket
-      ansible.builtin.shell:
-        cmd: kubectl --kubeconfig {{ playbook_dir }}/.kube/config apply -f https://raw.githubusercontent.com/cri-o/cri-o/main/contrib/metrics-exporter/cluster.yaml
+    - name: Download cri-o metrics-server manifest
+      ansible.builtin.get_url:
+        url: "https://raw.githubusercontent.com/cri-o/cri-o/main/contrib/metrics-exporter/cluster.yaml"
+        dest: "{{ role_path }}/files/cluster.yml"
+      when: kubernetesConfigurations.socket == "crio"
+
+    - name: Deploy cri-o metrics-server
+      community.kubernetes.k8s:
+        state: present
+        src: cluster.yml
+        kubeconfig: "{{ playbook_dir }}/.kube/config"
       when: kubernetesConfigurations.socket == "crio"
 
     - name: Remove Metrics Deployment file if previously downloaded

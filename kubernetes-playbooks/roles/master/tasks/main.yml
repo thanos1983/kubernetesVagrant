@@ -29,6 +29,11 @@
     name: kubernetes
     tasks_from: metrics.yml
 
+- name: Deploy serverless functions
+  ansible.builtin.include_role:
+    name: fission
+  when: "{{ kubernetesConfigurations.servelessFunctions | default(false) | bool }}"
+
 - name: Create Join Script for Client
   ansible.builtin.include_role:
     name: kubernetes

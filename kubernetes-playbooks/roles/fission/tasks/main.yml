@@ -1,0 +1,4 @@
+---
+# tasks file for roles/fission
+- name: Prepare and deploy Serverless on the cluster
+  ansible.builtin.include_tasks: fission.yml
