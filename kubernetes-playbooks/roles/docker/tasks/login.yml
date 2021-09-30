@@ -1,0 +1,15 @@
+---
+# tasks file for roles/docker login
+- name: Log into registry "{{ repo.registry }}"
+  community.docker.docker_login:
+    registry: "{{ repo.registry }}"
+    username: "{{ vaultData.username }}"
+    password: "{{ vaultData.password }}"
+  # tags: [ never ]
+
+- name: Log into registry "{{ repo.registry }}"
+  containers.podman.podman_login:
+    registry: "{{ repo.registry }}"
+    username: "{{ vaultData.username }}"
+    password: "{{ vaultData.password }}"
+  tags: [ never ]

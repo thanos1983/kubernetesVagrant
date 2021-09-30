@@ -1,0 +1,7 @@
+---
+# tasks file for roles/kubernetes caCleanup
+- name: Cleanup CA files
+  ansible.builtin.file:
+    path: "{{ ansible_parent_role_paths[0] }}/files/{{ item }}"
+    state: absent
+  loop: "{{ ingress.certfiles.values() }}"

@@ -1,0 +1,10 @@
+---
+# tasks file for roles/vault main
+- name: Vault get and extract CA via TOKEN for "{{ env_variable }}"
+  block:
+    - name: Vault get keys
+      ansible.builtin.include_tasks: getValuesFromVault.yml
+  rescue:
+    - name: Force FAIL if error in block occured
+      ansible.builtin.fail:
+        msg: Fail while trying to retrieve credentials from Vault

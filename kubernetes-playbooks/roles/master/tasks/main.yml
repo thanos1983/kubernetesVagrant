@@ -32,7 +32,7 @@
 - name: Deploy serverless functions
   ansible.builtin.include_role:
     name: fission
-  when: "{{ kubernetesConfigurations.servelessFunctions | default(false) | bool }}"
+  when: kubernetesConfigurations.servelessFunctions | default(false) | bool
 
 - name: Create Join Script for Client
   ansible.builtin.include_role:

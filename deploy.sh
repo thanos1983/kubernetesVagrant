@@ -7,14 +7,14 @@ function error() {
 		&& exit 1
 }
 
-function build() {
+function deploy() {
 
-	build_env=${build_env:="dev"}
-	ansible_tags=${ansible_tags:="sampleContainerBuildProcess"}
+	deploy_env=${deploy_env:="dev"}
+	ansible_tags=${ansible_tags:="sampleContainerDeployProcess"}
 	ansible_skip_tags=${ansible_skip_tags:="never"}
 	target_hosts_group=${target_hosts_group:="local"}
 
-	case "${build_env}" in
+	case "${deploy_env}" in
 		"dev")
 			inventory_file="kubernetes-playbooks/inventories/development/hosts.yml"
 		;;
@@ -45,9 +45,9 @@ function build() {
 			--skip-tags ${ansible_skip_tags} \
 			-e env_variable=${build_env} \
 			-e target_hosts=${target_hosts_group} \
-			kubernetes-playbooks/build.yml -v || error "build"
+			kubernetes-playbooks/deploy.yml -v || error "deploy"
 	fi
 
 }
 
-build
+deploy

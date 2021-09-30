@@ -1,0 +1,28 @@
+---
+# tasks file for roles/docker build
+- name: Build and push Image with name "{{ image.name }}" and tag "{{ image.tag }}"
+  community.docker.docker_image:
+    build:
+      pull: yes
+      path: "{{ ansible_parent_role_paths[0] }}/files"
+    name: "{{ image.name }}"
+    tag: "{{ image.tag }}"
+    push: yes
+    source: build
+  # tags: [ never ]
+
+- name: Build and push Image with name "{{ image.name }}" and tag "{{ image.tag }}"
+  containers.podman.podman_image:
+    path: "{{ ansible_parent_role_paths[0] }}/files"
+    name: "{{ image.name }}"
+    tag: "{{ image.tag }}"
+    push: yes
+    build:
+      cache: no
+      force_rm: yes
+      format: oci
+      annotation:
+        app: nginx
+        function: webserver
+        info: Demo web server
+  tags: [ never ] 

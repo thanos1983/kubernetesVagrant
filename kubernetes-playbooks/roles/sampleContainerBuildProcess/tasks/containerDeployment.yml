@@ -1,0 +1,28 @@
+---
+# tasks file for roles/sampleContainerBuildProcess containerDeployment
+- name: Retrieve credentials from Vault
+  ansible.builtin.include_role:
+    name: vault
+
+- name: Log in to Azure Docker Registry
+  ansible.builtin.include_role:
+    name: docker
+    tasks_from: login.yml
+
+- name: Run container
+  community.docker.docker_container:
+    pull: true
+    network_mode: default
+    tls_hostname: localhost
+    name: "{{ deploy.name }}"
+    restart_policy: unless-stopped
+    published_ports: "{{ portBinds }}"
+    container_default_behavior: compatibility
+    image: "{{ image.name }}:{{ image.tag }}"
+    env:
+      ENV_DEPLOYMENT: "{{ deploy.stage }}"
+
+- name: Log out Azure Docker Registry
+  ansible.builtin.include_role:
+    name: docker
+    tasks_from: logout.yml

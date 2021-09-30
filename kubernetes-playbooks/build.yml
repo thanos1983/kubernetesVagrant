@@ -1,0 +1,8 @@
+---
+- hosts: "{{ target_hosts }}"
+  any_errors_fatal: true
+  connection: local
+
+  roles:
+    - role: sampleContainerBuildProcess
+      tags: [ sampleContainerBuildProcess ]

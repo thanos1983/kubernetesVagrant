@@ -1,0 +1,32 @@
+---
+# vars file for roles/sampleContainerBuildProcess
+domain:
+  urlPrefix: 'http'
+  url: 'localhost' # do not modify
+  validation_content: 'Welcome to nginx!' # case sensitive
+
+cert:
+  validation:
+    http: 'no' # due to no CA we need to disable it 
+    https: 'no' # due to self signed CA we need to disable it 
+  country_name: DK
+  email_address: garyfalos@cpan.org
+  organization_name: JustForFun
+
+deploy:
+  imageTag: '0.0.1'
+  containerPort: '80'
+  name: 'my_nginx_sample'
+  stage: '{{ env_variable }}'
+
+image:
+  tag: '{{ deploy.imageTag }}'
+  name: '{{ repo.registry }}/{{ deploy.name }}'
+
+portBinds:
+#  - '{{ deploy.healthPort }}:{{ deploy.healthPort }}'
+  - '{{ deploy.containerPort }}:{{ deploy.containerPort }}'
+
+portsToCheck:
+#  - '{{ deploy.healthPort }}'
+  - '{{ deploy.containerPort }}'
