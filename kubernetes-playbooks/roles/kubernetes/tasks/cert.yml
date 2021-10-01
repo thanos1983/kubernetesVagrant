@@ -1,0 +1,26 @@
+---
+# tasks file for roles/kiubernetes cert
+- name: Generate an OpenSSL private key with the default values (4096 bits, RSA)
+  community.crypto.openssl_privatekey:
+    path: "{{ ansible_parent_role_paths[0] }}/files/{{ ingress.certfiles.key }}"
+
+- name: Generate an OpenSSL CSR with subjectAltName extension with dynamic list
+  community.crypto.openssl_csr:
+    path: "{{ ansible_parent_role_paths[0] }}/files/{{ ingress.certfiles.csr }}"
+    privatekey_path: "{{ ansible_parent_role_paths[0] }}/files/{{ ingress.certfiles.key }}"
+    country_name: "{{ cert.country_name }}"
+    organization_name: "{{ cert.organization_name }}"
+    email_address: "{{ cert.email_address }}"
+    common_name: "{{ ansible_hostname }}"
+    subject_alt_name: "{{ item.value | map('regex_replace', '^', 'DNS:') | list }}"
+  with_dict:
+    dns_server:
+    - "my.k8s.cluster.com"
+    - "*.my.k8s.cluster.com"
+
+- name: Generate a Self Signed OpenSSL certificate
+  community.crypto.x509_certificate:
+    path: "{{ ansible_parent_role_paths[0] }}/files/{{ ingress.certfiles.crt }}"
+    privatekey_path: "{{ ansible_parent_role_paths[0] }}/files/{{ ingress.certfiles.key }}"
+    csr_path: "{{ ansible_parent_role_paths[0] }}/files/{{ ingress.certfiles.csr }}"
+    provider: selfsigned

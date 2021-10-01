@@ -1,0 +1,7 @@
+---
+# tasks file for roles/docker removeImageFromRegistry
+- name: Remove Image from Azzure Docker Registry
+  community.docker.docker_image:
+    name: "{{ image.name }}"
+    tag: "{{ image.tag }}"
+    state: absent

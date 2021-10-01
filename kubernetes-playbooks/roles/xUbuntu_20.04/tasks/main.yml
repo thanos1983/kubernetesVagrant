@@ -1,5 +1,11 @@
 ---
 # tasks file for roles/ubuntu main
+- name: DNS condigurations
+  ansible.builtin.include_tasks: dns.yml
+
+- name: Add and update CAs
+  ansible.builtin.include_tasks: installCAs.yml
+
 - name: Add Kubernetes apt signing key
   ansible.builtin.include_tasks: aptKey.yml
 

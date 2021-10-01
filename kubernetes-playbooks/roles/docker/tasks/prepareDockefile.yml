@@ -1,0 +1,6 @@
+---
+# tasks file for roles/docker prepareDockefile
+- name: Prepare Dockerfile
+  ansible.builtin.template:
+    src: "{{ ansible_parent_role_paths[0] }}/templates/Dockerfile.j2"
+    dest: "{{ ansible_parent_role_paths[0] }}/files/Dockerfile"

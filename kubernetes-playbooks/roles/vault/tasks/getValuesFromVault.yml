@@ -1,0 +1,15 @@
+---
+# tasks file for roles/vault getValuesFromVault
+- name: Vault get Values based on keys
+  ansible.builtin.set_fact:
+    "vaultData": "{{ vaultData | default({}) | combine ({ item.key:
+                     lookup('community.hashi_vault.hashi_vault',
+                     'secret={{ item.path }}
+                      auth_method=approle
+                      role_id={{ vault.role_id }}
+                      secret_id={{ vault.secret_id }}
+                      url={{ vault.url }}
+                      validate_certs=False') }) }}"
+                      # cacert={{ role_path }}/files/{{ vault.ca }}') }) }}"
+  loop: "{{ vault.keysToRetrieve }}"
+  no_log: true

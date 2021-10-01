@@ -1,0 +1,78 @@
+---
+# tasks file for roles/sampleContainerDeployProcess main
+- name: Get credentials from Vault
+  ansible.builtin.include_role:
+    name: vault
+
+- name: Login to Azzure Docker Registry
+  ansible.builtin.import_role:
+    name: docker
+    tasks_from: login
+
+- name: Deploy / validate ingress '{{ app }}' on namespace '{{ kubeadm.cluster.namespace }}'
+  block:
+    - name: Create Self Signed Certificate
+      include_role:
+        name: kubernetes
+        tasks_from: cert
+
+    - name: Create Namespace '{{ kubeadm.cluster.namespace }}'
+      include_role:
+        name: kubernetes
+        tasks_from: namespace
+
+    - name: Create Secret(s)
+      ansible.builtin.include_role:
+        name: kubernetes
+        tasks_from: tlsSecret
+
+    - name: Create Deployment for '{{ app }}'
+      ansible.builtin.include_role:
+        name: kubernetes
+        tasks_from: deploy
+
+    - name: Create Service '{{ service.metadata.name }}'
+      ansible.builtin.include_role:
+        name: kubernetes
+        tasks_from: service
+
+    - name: Create Ingress '{{ ingress.metadata.name }}'
+      ansible.builtin.include_role:
+        name: kubernetes
+        tasks_from: "{{ kubernetesConfigurations.ingressController }}IngressHttps"
+
+    - name: Validate uri for Webserver
+      ansible.builtin.include_role:
+        name: kubernetes
+        tasks_from: uriContentValidation
+  rescue:
+    - name: Remove Deployment for '{{ app }}'
+      ansible.builtin.include_role:
+        name: kubernetes
+        tasks_from: deploy
+      vars:
+        deploymentState: absent
+
+    - name: Remove Service '{{ service.metadata.name }}'
+      ansible.builtin.include_role:
+        name: kubernetes
+        tasks_from: service
+      vars:
+        serviceState: absent
+
+    - name: Remove Ingress '{{ ingress.metadata.name }}'
+      ansible.builtin.include_role:
+        name: kubernetes
+        tasks_from: "{{ kubernetesConfigurations.ingressController }}IngressHttps"
+      vars:
+        ingressState: absent
+  always:
+    - name: Cleanup CA files
+      ansible.builtin.include_role:
+        name: kubernetes
+        tasks_from: caCleanup
+
+    - name: Logout from Azzure Docker Registry
+      ansible.builtin.import_role:
+        name: docker
+        tasks_from: logout

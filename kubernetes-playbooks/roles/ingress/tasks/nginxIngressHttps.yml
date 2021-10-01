@@ -25,7 +25,7 @@
       tls:
       - hosts:
           - "{{ ingress.spec.tls.hosts }}"
-        secretName: "secret-{{ kubeadm.cluster.namespace }}"
+        secretName: "secret-{{ kubeadm.clusterRoleUser.namespace }}"
       rules:
       - host: "{{ ingress.spec.rules.host }}"
         http:

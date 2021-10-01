@@ -1,6 +1,17 @@
 ---
 # tasks file for roles/kubernetes calico
 - name: Install calico pod network
+  block:
+    - name: Download calico manifest
+      ansible.builtin.get_url:
+        url: https://docs.projectcalico.org/manifests/calico.yaml
+        dest: "{{ role_path }}/files/calico.yml"
+
+    - name: Deploy Calico
+      community.kubernetes.k8s:
+        state: present
+        src: calico.yml
+        kubeconfig: "{{ playbook_dir }}/.kube/config"
   become: false
-  ansible.builtin.shell:
-    cmd: kubectl create -f https://docs.projectcalico.org/manifests/calico.yaml
+  connection: local
+  delegate_to: localhost

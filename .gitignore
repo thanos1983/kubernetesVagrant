@@ -365,3 +365,8 @@ join-command.sh
 
 # Ignore Visual Studio files
 .DS_Store
+
+# Ignore CA files
+*.crt
+*.csr
+*.pem

@@ -1,0 +1,18 @@
+---
+# tasks file for roles/docker main
+- name: Login to Azure Docker Registry Build / Push Dockerfile then logout and prune
+  block:
+    - name: Log in to Registry
+      ansible.builtin.include_tasks: login.yml
+
+    - name: Build and push Dockerfile
+      ansible.builtin.include_tasks: build.yml
+
+    - name: Log out of Registry
+      ansible.builtin.include_tasks: logout.yml
+
+    - name: Prune everything (including non-dangling images)
+      ansible.builtin.include_tasks: prune.yml
+  rescue:
+    - ansible.builtin.fail:
+        msg: Error during loging / build / push to Azure Registry

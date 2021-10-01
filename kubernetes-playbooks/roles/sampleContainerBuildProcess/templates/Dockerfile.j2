@@ -1,0 +1,8 @@
+FROM docker.io/nginx
+
+EXPOSE {% for port in range(0, (portsToCheck | length | int)) -%}
+{{ portsToCheck[port] }}
+{%- if not loop.last %} {% endif -%}
+{%- endfor %}
+
+# COPY ["htmlSample", "/usr/share/nginx/html"]

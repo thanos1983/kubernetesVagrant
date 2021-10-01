@@ -5,5 +5,5 @@
   any_errors_fatal: true
 
   roles:
-    - role: client
+    - role: worker
     - role: ingress
