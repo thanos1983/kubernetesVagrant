@@ -33,6 +33,11 @@
         name: azure
         tasks_from: listInstancesOfRegistry
 
+    - name: Debug StdOut of container
+      ansible.builtin.debug:
+        msg: "{{ dockerContainerStdoutput.stdout_lines }}"
+      when: "{{ dockerContainerStdoutput.stdout_lines | length > 0 }}"
+
     - name: Remove Image
       ansible.builtin.include_role:
         name: azure

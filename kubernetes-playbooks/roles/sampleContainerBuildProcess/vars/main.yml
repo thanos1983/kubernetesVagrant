@@ -5,6 +5,10 @@ domain:
   url: 'localhost' # do not modify
   validation_content: 'Welcome to nginx!' # case sensitive
 
+ports:
+  http: '80'
+  https: '443'
+
 cert:
   validation:
     http: 'no' # due to no CA we need to disable it 
@@ -14,7 +18,7 @@ cert:
   organization_name: JustForFun
 
 deploy:
-  imageTag: '0.0.1'
+  imageTag: '0.0.2'
   containerPort: '80'
   name: 'my_nginx_sample'
   stage: '{{ env_variable }}'

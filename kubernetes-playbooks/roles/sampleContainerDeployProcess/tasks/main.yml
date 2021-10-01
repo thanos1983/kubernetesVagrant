@@ -8,7 +8,6 @@
   ansible.builtin.import_role:
     name: docker
     tasks_from: login
-  delegate_to: k8s-master
 
 - name: Deploy / validate ingress '{{ app }}' on namespace '{{ kubeadm.cluster.namespace }}'
   block:
@@ -77,4 +76,3 @@
       ansible.builtin.import_role:
         name: docker
         tasks_from: logout
-      delegate_to: k8s-master

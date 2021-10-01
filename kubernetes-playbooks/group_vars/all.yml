@@ -1,10 +1,10 @@
 kubernetesConfigurations:
   version:
-    major: "1.21"
-    minor: "5"
+    major: "1.22"
+    minor: "2"
   domain: "my.k8s.cluster.com"
   socket: "containerd" # crio or containerd
   operatingSystem: "xUbuntu_20.04"
   networkElement: "cilium" # calico, weavenet or cilium
-  ingressController: "nginx" # nginx or haproxy
+  ingressController: "haproxy" # nginx or haproxy
   servelessFunctions: false

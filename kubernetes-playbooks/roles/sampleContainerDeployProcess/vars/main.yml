@@ -27,7 +27,7 @@ kubeadm:
     namespace: 'demo'
 
 deploy:
-  imageTag: '0.0.1'
+  imageTag: '0.0.3'
   containerPort: '80'
   name: 'my_nginx_sample'
   stage: '{{ env_variable }}'
@@ -64,7 +64,8 @@ deployment:
       spec:
         containers:
           name: '{{ app }}'
-          image: '{{ image.name }}:{{ image.tag }}'
+          # image: '{{ image.name }}:{{ image.tag }}'
+          image: 'nginx'
           imagePullPolicy: 'IfNotPresent'
           ports:
             containerPort: 80

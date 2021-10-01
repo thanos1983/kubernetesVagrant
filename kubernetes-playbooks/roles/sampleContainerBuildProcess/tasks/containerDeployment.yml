@@ -21,6 +21,7 @@
     image: "{{ image.name }}:{{ image.tag }}"
     env:
       ENV_DEPLOYMENT: "{{ deploy.stage }}"
+  register: dockerContainerStdoutput
 
 - name: Log out Azure Docker Registry
   ansible.builtin.include_role:
