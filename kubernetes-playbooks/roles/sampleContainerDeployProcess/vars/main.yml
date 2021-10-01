@@ -5,6 +5,9 @@ version: 'v0.0.1'
 component: 'frontend'
 managed_by: 'k8s'
 
+kubernetesSecret:
+  name: 'regcred'
+
 ports:
   http: '30080'
   https: '30443'
@@ -27,7 +30,7 @@ kubeadm:
     namespace: 'demo'
 
 deploy:
-  imageTag: '0.0.3'
+  imageTag: '0.0.1'
   containerPort: '80'
   name: 'my_nginx_sample'
   stage: '{{ env_variable }}'
@@ -64,11 +67,12 @@ deployment:
       spec:
         containers:
           name: '{{ app }}'
-          # image: '{{ image.name }}:{{ image.tag }}'
-          image: 'nginx'
+          image: '{{ image.name }}:{{ image.tag }}'
           imagePullPolicy: 'IfNotPresent'
           ports:
             containerPort: 80
+          imagePullSecrets:
+            name: "{{ kubernetesSecret.name }}"
 
 service:
   metadata:

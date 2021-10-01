@@ -34,6 +34,11 @@
     name: fission
   when: kubernetesConfigurations.servelessFunctions | default(false) | bool
 
+- name: Create secret for private Docker Registry
+  ansible.builtin.include_role:
+    name: kubernetes
+    tasks_from: dockerRegistryCreateSecret
+
 - name: Create Join Script for Client
   ansible.builtin.include_role:
     name: kubernetes
