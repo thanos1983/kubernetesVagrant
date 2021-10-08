@@ -91,6 +91,19 @@ metadata:
   uid: 97619dee-34b2-4d6b-a2a3-7cebfedd420a
 ```
 
+## In case the user wants to pull images from private Docker registry the documentation on how we make the secret is here from the official page (Pull an Image from a Private Registry)[https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/].
+
+Sample of how to encode / decode base64 strings in terminal:
+
+```bash
+echo -n 'linuxhint.com' | base64
+bGludXhoaW50LmNvbQ==
+echo 'bGludXhoaW50LmNvbQ==' | base64 --decode
+linuxhint.com%   
+```
+
+We use `-n` flag to force echo not to use `\n` new line character at the end of the string.
+
 License
 -------
 
