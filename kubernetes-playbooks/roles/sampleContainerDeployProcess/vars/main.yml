@@ -5,7 +5,7 @@ version: 'v0.0.1'
 component: 'frontend'
 managed_by: 'k8s'
 
-kubernetesSecret:
+kubernetesDockerRegistrySecret:
   name: 'regcred'
 
 ports:
@@ -72,7 +72,7 @@ deployment:
           ports:
             containerPort: 80
           imagePullSecrets:
-            name: "{{ kubernetesSecret.name }}"
+            name: "{{ kubernetesDockerRegistrySecret.name }}"
 
 service:
   metadata:

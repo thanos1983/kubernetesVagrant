@@ -60,8 +60,3 @@ crio:
     - { src: "02-cgroup-manager.conf", dest: "/etc/crio/crio.conf.d" }
     - { src: "03-crio-crun.conf", dest: "/etc/crio/crio.conf.d" }
     - { src: "03-crio-runc.conf", dest: "/etc/crio/crio.conf.d" }
-
-kubectl:
-  proxy:
-    port: "8001"
-    ip: "0.0.0.0"

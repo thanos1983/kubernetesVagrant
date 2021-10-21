@@ -35,7 +35,7 @@ This playbook is intented to be used by other roles so no documentation on this 
 
 ## UI Token
 ```bash
-token:      eyJhbGciOiJSUzI1NiIsImtpZCI6IkhlQlpEdVlPMWhzbm9QRWV1ajlzZS1ZOFVMcDlpMFA5a3E4dWx3cXhYMk0ifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJhZG1pbi11c2VyLXRva2VuLWR6NHQ3Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImFkbWluLXVzZXIiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiI4YzczNThjNS0xMDUxLTQ5MGQtOGE2Mi01MjFhMzVkNjVhMWUiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6a3ViZXJuZXRlcy1kYXNoYm9hcmQ6YWRtaW4tdXNlciJ9.PnAFW7WZDdlavt7YRXK3YLnTc5WGoz6ccefpFsq9tfWsz2-VHjg_Il9uL53ttQysk1G_HYzDFYkCng-Z4qEtGWnSZ-QqWAq8otNpyA0mN-5_ylKJwV9SlTUJI8oKXN3ZmEDzRPG564kc_oWQDsMe6kG7gC2AIjsHgXF8wICxj37_hlIFF9wxBq3oT6lRZLq5LO7Z80nEgo4mz_q5RfrA2rWC_LBOD9NUFEd2lzBmau60SmRzAKfpOcJjvgsT_hsfvUURiEAJpkouqxMEoehr28ZnmxemZLxzzYL-55s9DlwtML4uS0jBxdhwkpSgWH9Ve3-m5XXRWLUB5vsEXe6ZGg
+token:      eyJhbGciOiJSUzI1NiIsImtpZCI6IndyNkU4YU5IbWlwNHRLZzVrclAwM2pPR1dObVRmZThsVnVJTmpMSURZUncifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJhZG1pbi11c2VyLXRva2VuLWNwa3YyIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImFkbWluLXVzZXIiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiJmN2Y2YTdlMS03NDEyLTQ0MzEtOTk1YS1jNjE4ODk5NzQ0OWMiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6a3ViZXJuZXRlcy1kYXNoYm9hcmQ6YWRtaW4tdXNlciJ9.W49pFwdRpNPlhRBCiOP0Z3BBWJMrvpY_FVtUnJXn3w6oXyiWCOkMo7JJn-0mMftlWxK0MCAmrv1RJwV3yHA3MlWsgTnAxI-jdu1By8NGXDMa0SzymKkyqgAnXijrqN6xgGnjVB0OGQ_tAobtxC4otxTm3_e_zLAfy6sCfa9qcPDmWxBveRpmwWvwQawwvRs8F2RW_9uCySe6ltYC_r_bVIXXC3VB1bAw8k_N2xbTPrZlUlAiUfBiVyfEEBUeao19DKU63d-UHE2CMlfZ6qwFap3W5Km_BiUEgjdNsuoaKprgA-upeE-pNFaMxG7Yf6giP37NKWXlN8nEInhD8V_ErQ
 ```
 
 ## CRI-O
@@ -90,6 +90,19 @@ metadata:
   resourceVersion: "210"
   uid: 97619dee-34b2-4d6b-a2a3-7cebfedd420a
 ```
+
+## In case the user wants to pull images from private Docker registry the documentation on how we make the secret is here from the official page (Pull an Image from a Private Registry)[https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/].
+
+Sample of how to encode / decode base64 strings in terminal:
+
+```bash
+echo -n 'linuxhint.com' | base64
+bGludXhoaW50LmNvbQ==
+echo 'bGludXhoaW50LmNvbQ==' | base64 --decode
+linuxhint.com%   
+```
+
+We use `-n` flag to force echo not to use `\n` new line character at the end of the string.
 
 License
 -------

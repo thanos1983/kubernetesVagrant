@@ -1,0 +1,15 @@
+---
+# tasks file for roles/kubernetes podLogs
+- name: Get logs from deployment "{{ deployment.metadata.name }}" at namespace "{{ deployment.metadata.namespace }}"
+  community.kubernetes.k8s_log:
+    api_version: apps/v1
+    kind: Deployment
+    namespace: "{{ deployment.metadata.namespace }}"
+    name: "{{ deployment.metadata.name }}"
+    kubeconfig: "{{ playbook_dir }}/.kube/config"
+  register: log
+
+- name: Debug logs from one pod from deployment "{{ deployment.metadata.name }}" at namespace "{{ deployment.metadata.namespace }}" if not empty
+  ansible.builtin.debug:
+    msg: "{{ log.log_lines }}" 
+  when: log.log_lines | length > 0

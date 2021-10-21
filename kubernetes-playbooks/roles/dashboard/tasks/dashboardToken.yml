@@ -1,0 +1,27 @@
+---
+# tasks file for roles/dashboard dashboardToken
+- name: Retrieve token for Dashboard, append token to .kube/config file and also replace the old token on README.md
+  block:
+    - name: Retrieve Token for UI
+      ansible.builtin.shell:
+        cmd: "kubectl --kubeconfig {{ playbook_dir }}/.kube/config -n kubernetes-dashboard describe secret $(kubectl --kubeconfig {{ playbook_dir }}/.kube/config -n kubernetes-dashboard get secret | grep {{ kubeadm.clusterRoleUser.name }} | awk '{print $1}')"
+      register: kubectl_token
+
+    - name: Debug Token
+      ansible.builtin.debug:
+        msg: "{{ kubectl_token.stdout_lines | select('match','token:*') | list | first }}"
+
+    - name: Replace token on Readme file
+      ansible.builtin.replace:
+        path: "{{ role_path }}/README.md"
+        regexp: "token:(\\s+.*)?$"
+        replace: "{{ kubectl_token.stdout_lines | select('match','token:*') | list | first }}"
+
+    - name: Add Token for Admin Dashboard
+      ansible.builtin.lineinfile:
+        state: present
+        path: "{{ playbook_dir }}/.kube/config"
+        line: "    {{ kubectl_token.stdout_lines | select('match','token:*') | list | first }}"
+  become: false
+  connection: local
+  delegate_to: localhost

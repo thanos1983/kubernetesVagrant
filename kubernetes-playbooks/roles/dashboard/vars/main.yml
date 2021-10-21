@@ -1,0 +1,6 @@
+---
+# vars file for kubernetes-playbooks/roles/dashboard
+kubectl:
+  proxy:
+    port: "8001"
+    ip: "0.0.0.0"

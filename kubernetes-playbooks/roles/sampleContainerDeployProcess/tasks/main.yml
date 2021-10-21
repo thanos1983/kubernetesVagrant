@@ -46,12 +46,23 @@
         name: kubernetes
         tasks_from: uriContentValidation
   rescue:
+    - name: Debug Logs of Deployment
+      ansible.builtin.include_role:
+        name: kubernetes
+        tasks_from: podLogs
+
+    - name: Rollback Deployment to last deployed working version
+      ansible.builtin.include_role:
+        name: kubernetes
+        tasks_from: rollbackDeployment
+  
     - name: Remove Deployment for '{{ app }}'
       ansible.builtin.include_role:
         name: kubernetes
         tasks_from: deploy
       vars:
         deploymentState: absent
+      tags: [ never ]
 
     - name: Remove Service '{{ service.metadata.name }}'
       ansible.builtin.include_role:
@@ -59,6 +70,7 @@
         tasks_from: service
       vars:
         serviceState: absent
+      tags: [ never ]
 
     - name: Remove Ingress '{{ ingress.metadata.name }}'
       ansible.builtin.include_role:
@@ -66,6 +78,7 @@
         tasks_from: "{{ kubernetesConfigurations.ingressController }}IngressHttps"
       vars:
         ingressState: absent
+      tags: [ never ]
   always:
     - name: Cleanup CA files
       ansible.builtin.include_role:
