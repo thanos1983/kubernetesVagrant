@@ -1,13 +1,17 @@
 ---
-# tasks file for roles/kubernetes dashboard
+# tasks file for roles/dashboard main
 - name: Deploy Dashboard
   ansible.builtin.include_tasks: dashboardDeploy.yml
 
 - name: Create ServiceAccount
-  ansible.builtin.include_tasks: serviceAccount.yml
+  ansible.builtin.include_role:
+    name: rbac
+    tasks_from: serviceAccount
 
 - name: Create ClusterRoleBinding
-  ansible.builtin.include_tasks: clusterRoleBinding.yml
+  ansible.builtin.include_role:
+    name: rbac
+    tasks_from: clusterRoleBinding
 
 - name: Dashboard Token processes
   ansible.builtin.include_tasks: dashboardToken.yml

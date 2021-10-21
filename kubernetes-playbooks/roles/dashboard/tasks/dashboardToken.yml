@@ -1,5 +1,5 @@
 ---
-# tasks file for roles/kubernetes dashboardToken
+# tasks file for roles/dashboard dashboardToken
 - name: Retrieve token for Dashboard, append token to .kube/config file and also replace the old token on README.md
   block:
     - name: Retrieve Token for UI
