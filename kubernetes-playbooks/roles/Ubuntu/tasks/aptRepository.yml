@@ -1,0 +1,8 @@
+---
+# tasks file for roles/ubuntu aptRepository
+- name: Adding apt repository for Kubernetes
+  ansible.builtin.apt_repository:
+    filename: "{{ item.filename }}"
+    state: "{{ item.state }}"
+    repo: "{{ item.repo }}"
+  loop: "{{ ubuntu.aptRepository[kubernetesConfigurations.socket] }}"

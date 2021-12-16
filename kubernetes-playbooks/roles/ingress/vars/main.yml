@@ -1,37 +1,51 @@
 ---
 # vars file for roles/ingress
 url:
-  haproxy: 'https://raw.githubusercontent.com/haproxytech/kubernetes-ingress/master/deploy/haproxy-ingress.yaml'
-  nginx: 'https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/baremetal/deploy.yaml'
+  haproxy: "https://raw.githubusercontent.com/haproxytech/kubernetes-ingress/master/deploy/haproxy-ingress.yaml"
+  nginx: "https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/baremetal/deploy.yaml"
+  kong: "https://raw.githubusercontent.com/Kong/kubernetes-ingress-controller/master/deploy/single/all-in-one-dbless.yaml"
 
 ports:
-  http: '30080'
-  https: '30443'
+  http: "30080"
+  https: "30443"
 
 nodePortPorts:
   nginx:
     http:
-      after: 'appProtocol: http$'
-      line: '      nodePort: {{ ports.http }}'
+      after: "appProtocol: http$"
+      line: "      nodePort: {{ ports.http }}"
     https:
-      after: 'appProtocol: https$'
-      line: '      nodePort: {{ ports.https }}'
+      after: "appProtocol: https$"
+      line: "      nodePort: {{ ports.https }}"
     trafficPolicy:
-      after: 'type: LoadBalancer$'
-      line: '  externalTrafficPolicy: Local'
+      after: "type: LoadBalancer$"
+      line: "  externalTrafficPolicy: Local"
     comment:
-      after: 'type: LoadBalancer$'
-      line: '  # so we can preserve source IP address'
+      after: "type: LoadBalancer$"
+      line: "  # so we can preserve source IP address"
   haproxy:
     http:
-      after: 'targetPort: 80$'
-      line: '    nodePort: {{ ports.http }}'
+      after: "targetPort: 80$"
+      line: "    nodePort: {{ ports.http }}"
     https:
-      after: 'targetPort: 443$'
-      line: '    nodePort: {{ ports.https }}'
+      after: "targetPort: 443$"
+      line: "    nodePort: {{ ports.https }}"
     trafficPolicy:
-      after: 'type: LoadBalancer$'
-      line: '  externalTrafficPolicy: Local'
+      after: "type: LoadBalancer$"
+      line: "  externalTrafficPolicy: Local"
     comment:
-      after: 'type: LoadBalancer$'
-      line: '  # so we can preserve source IP address'
+      after: "type: LoadBalancer$"
+      line: "  # so we can preserve source IP address"
+  kong:
+    http:
+      after: "targetPort: 8000$"
+      line: "    nodePort: {{ ports.http }}"
+    https:
+      after: "targetPort: 8443$"
+      line: "    nodePort: {{ ports.https }}"
+    trafficPolicy:
+      after: "type: LoadBalancer$"
+      line: "  externalTrafficPolicy: Local"
+    comment:
+      after: "type: LoadBalancer$"
+      line: "  # so we can preserve source IP address"

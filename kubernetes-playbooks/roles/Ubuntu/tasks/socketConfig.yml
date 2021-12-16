@@ -1,0 +1,23 @@
+---
+# tasks file for roles/ubuntu socketConfig
+- name: Create modules directory if it does not exist
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: "{{ item.state }}"
+    mode: "{{ item.mode }}"
+  loop: "{{ kubernetes.directories.values() | flatten }}"
+
+- name: Load kernel modules for Kubernetes
+  ansible.builtin.include_role:
+    name: kubernetes
+    tasks_from: modules
+
+- name: Extend kernel functionality for Kubernetes
+  ansible.builtin.include_role:
+    name: kubernetes
+    tasks_from: kernel
+
+- name: Socket configurations for kubernetes
+  ansible.builtin.include_role:
+    name: kubernetes
+    tasks_from: "{{ kubernetesConfigurations.socket }}"

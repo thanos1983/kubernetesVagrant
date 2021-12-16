@@ -8,7 +8,7 @@
         dest: "{{ role_path }}/files/calico.yml"
 
     - name: Deploy Calico
-      community.kubernetes.k8s:
+      kubernetes.core.k8s:
         state: present
         src: calico.yml
         kubeconfig: "{{ playbook_dir }}/.kube/config"

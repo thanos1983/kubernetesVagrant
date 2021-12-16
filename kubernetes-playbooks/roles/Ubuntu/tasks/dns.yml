@@ -1,0 +1,18 @@
+---
+# tasks file for roles/ubuntu dns
+- name: Replace DNS condfigurations entries in '/etc/systemd/resolved.conf' file
+  ansible.builtin.lineinfile:
+    path: /etc/systemd/resolved.conf
+    search_string: "{{ item.search }}"
+    line: "{{ item.line }}"
+    backup: yes
+    validate: systemd-resolve --status %s
+  loop:
+    - { search: "#DNS=", line: "DNS=8.8.8.8" }
+    - { search: "#FallbackDNS=", line: "FallbackDNS=193.162.153.164" }
+
+- name: Restart service systemd-resolved on, in all cases, also issue daemon-reload to pick up config changes
+  ansible.builtin.systemd:
+    state: restarted
+    daemon_reload: yes
+    name: systemd-resolved

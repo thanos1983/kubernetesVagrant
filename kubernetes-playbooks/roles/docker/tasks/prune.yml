@@ -15,4 +15,4 @@
 - name: Prune everything (including non-dangling images)
   ansible.builtin.shell:
     icmd: podman system prune -a -f --volumes
-  tags: [ never ]
+  tags: [never]

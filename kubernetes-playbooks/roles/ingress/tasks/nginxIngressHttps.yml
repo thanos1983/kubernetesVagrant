@@ -1,7 +1,7 @@
 ---
 # tasks file for roles/kubernetes nginxIngressHttps
 - name: Ingress deployment with '{{ kubernetesConfigurations.ingressController }}' at '{{ ingress.metadata.namespace }}' namespace
-  community.kubernetes.k8s:
+  kubernetes.core.k8s:
     state: "{{ ingressState | default('present') }}"
     kubeconfig: "{{ playbook_dir }}/.kube/config"
     definition:

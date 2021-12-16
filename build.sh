@@ -3,8 +3,8 @@
 # set -e
 
 function error() {
-	echo "'${1-parameter}' failed with exit code $? in function '${FUNCNAME[1]}' at line ${BASH_LINENO[0]}" \
-		&& exit 1
+	echo "'${1-parameter}' failed with exit code $? in function '${FUNCNAME[1]}' at line ${BASH_LINENO[0]}" &&
+		exit 1
 }
 
 function build() {
@@ -15,18 +15,18 @@ function build() {
 	target_hosts_group=${target_hosts_group:="local"}
 
 	case "${build_env}" in
-		"dev")
-			inventory_file="kubernetes-playbooks/inventories/development/hosts.yml"
+	"dev")
+		inventory_file="kubernetes-playbooks/inventories/development/hosts.yml"
 		;;
-		"staging")
-                        inventory_file="kubernetes-playbooks/inventories/staging/hosts.yml"
-                ;;
-		"prod")
-			inventory_file="kubernetes-playbooks/inventories/production/hosts.yml"
+	"staging")
+		inventory_file="kubernetes-playbooks/inventories/staging/hosts.yml"
 		;;
-		*)
-			echo "Unknown environment [${build_env}] have to be either dev, staging or prod"
-			exit 1
+	"prod")
+		inventory_file="kubernetes-playbooks/inventories/production/hosts.yml"
+		;;
+	*)
+		echo "Unknown environment [${build_env}] have to be either dev, staging or prod"
+		exit 1
 		;;
 	esac
 

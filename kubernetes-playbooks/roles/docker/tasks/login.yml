@@ -12,4 +12,4 @@
     registry: "{{ repo.registry }}"
     username: "{{ vaultData.username }}"
     password: "{{ vaultData.password }}"
-  tags: [ never ]
+  tags: [never]

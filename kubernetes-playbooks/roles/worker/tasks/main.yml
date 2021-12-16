@@ -2,7 +2,8 @@
 # tasks file for roles/worker main
 - name: Operating System configurations
   ansible.builtin.include_role:
-    name: "{{ kubernetesConfigurations.operatingSystem }}"
+    # name: "{{ kubernetesConfigurations.operatingSystem }}"
+    name: "{{ hostvars[inventory_hostname].ansible_distribution }}"
 
 - name: Define node as Worker
   ansible.builtin.include_role:

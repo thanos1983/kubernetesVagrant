@@ -9,4 +9,4 @@
 - name: Log out of "{{ repo.registry }}"
   containers.podman.podman_logout:
     registry: "{{ repo.registry }}"
-  tags: [ never ]
+  tags: [never]

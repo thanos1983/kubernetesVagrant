@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ configMap.metadata.name }}
+  namespace: {{ configMap.metadata.namespace }}
+  labels:
+    app.kubernetes.io/name: {{ configMap.metadata.labels.name }}
+    app.kubernetes.io/instance: {{ configMap.metadata.labels.instance }}
+    app.kubernetes.io/version: {{ configMap.metadata.labels.version }}
+    app.kubernetes.io/component: {{ configMap.metadata.labels.component }}
+    app.kubernetes.io/managed-by: {{ configMap.metadata.labels.managed_by }}
+    app.kubernetes.io/created-by: {{ configMap.metadata.labels.created_by }}
+data:
+  {{ configMap.data.key }}: |
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <title>Title for app {{ app }}!</title>
+    <style>
+        body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+    </style>
+    </head>
+    <body>
+    <h1>Welcome to nginx for app {{ app }} in namespace {{ configMap.metadata.namespace }}!</h1>
+    <p>If you see this page, the nginx web server is successfully installed and
+    working. Further configuration is required.</p>
+
+    <p>For online documentation and support please refer to
+    <a href="http://nginx.org/">nginx.org</a>.<br/>
+    Commercial support is available at
+    <a href="http://nginx.com/">nginx.com</a>.</p>
+
+    <p><em>Thank you for using nginx.</em></p>
+    </body>
+    </html>

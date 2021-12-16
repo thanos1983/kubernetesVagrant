@@ -3,12 +3,12 @@
 - name: Add Cilium chart repo and deploy
   block:
     - name: Add cilium chart repo
-      community.kubernetes.helm_repository:
+      kubernetes.core.helm_repository:
         name: cilium
         repo_url: "https://helm.cilium.io/"
 
     - name: Deploy cilium chart inside kube-system namespace (and create it)
-      community.kubernetes.helm:
+      kubernetes.core.helm:
         name: "cilium"
         chart_ref: "cilium/cilium"
         chart_version: "1.10.4"
@@ -39,9 +39,9 @@
 - name: Wait until cilium has started properly
   ansible.builtin.shell:
     cmd: "cilium status --wait"
-  tags: [ never ]
+  tags: [never]
 
 - name: Run cilium tests
   ansible.builtin.shell:
     cmd: "cilium connectivity test"
-  tags: [ never ]
+  tags: [never]

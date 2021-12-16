@@ -26,10 +26,15 @@
         name: kubernetes
         tasks_from: dockerRegistryCreateSecret
 
+    - name: Create ConfigMap for Deployment
+      ansible.builtin.include_role:
+        name: kubernetes
+        tasks_from: configMap
+
     - name: Create Deployment for '{{ app }}'
       ansible.builtin.include_role:
         name: kubernetes
-        tasks_from: deployWithSecret
+        tasks_from: deployVolumesWithSecrets
 
     - name: Create Service '{{ service.metadata.name }}'
       ansible.builtin.include_role:
@@ -55,14 +60,14 @@
       ansible.builtin.include_role:
         name: kubernetes
         tasks_from: rollbackDeployment
-  
+
     - name: Remove Deployment for '{{ app }}'
       ansible.builtin.include_role:
         name: kubernetes
         tasks_from: deploy
       vars:
         deploymentState: absent
-      tags: [ never ]
+      tags: [never]
 
     - name: Remove Service '{{ service.metadata.name }}'
       ansible.builtin.include_role:
@@ -70,7 +75,7 @@
         tasks_from: service
       vars:
         serviceState: absent
-      tags: [ never ]
+      tags: [never]
 
     - name: Remove Ingress '{{ ingress.metadata.name }}'
       ansible.builtin.include_role:
@@ -78,7 +83,7 @@
         tasks_from: "{{ kubernetesConfigurations.ingressController }}IngressHttps"
       vars:
         ingressState: absent
-      tags: [ never ]
+      tags: [never]
   always:
     - name: Cleanup CA files
       ansible.builtin.include_role:

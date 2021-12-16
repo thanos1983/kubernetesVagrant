@@ -1,0 +1,21 @@
+---
+# tasks file for roles/ubuntu installCAs
+- name: Run the equivalent of "apt-get update" as a separate step
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Update repositories cache and install "ca-certificates" package
+  ansible.builtin.apt:
+    name: "ca-certificates"
+    state: present
+
+- name: Update all packages to their latest version
+  ansible.builtin.apt:
+    name: "*"
+    state: latest
+  tags: [ never ]
+
+- name: Remove dependencies / useless packages from cache
+  ansible.builtin.apt:
+    autoclean: yes
+    autoremove: yes

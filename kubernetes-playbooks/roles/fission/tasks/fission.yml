@@ -5,14 +5,14 @@
     - name: Create fission crds
       ansible.builtin.shell:
         cmd: "kubectl --kubeconfig {{ playbook_dir }}/.kube/config create -k github.com/fission/fission/crds/v1?ref={{ fission.metadata.version }}"
-    
+
     - name: Add fission chart repo
-      community.kubernetes.helm_repository:
+      kubernetes.core.helm_repository:
         name: fission-charts
         repo_url: "https://fission.github.io/fission-charts/"
 
     - name: Deploy fission chart at '{{ fission.metadata.namespace }}' namespace (and create it)
-      community.kubernetes.helm:
+      kubernetes.core.helm:
         name: "fission"
         chart_ref: "fission-charts/fission-all"
         chart_version: "{{ fission.metadata.version }}"

@@ -1,7 +1,7 @@
 ---
 # tasks file for roles/kubernetes namespace
 - name: Create or Remove Namespace "{{ ingress.metadata.namespace }}"
-  community.kubernetes.k8s:
+  kubernetes.core.k8s:
     name: "{{ ingress.metadata.namespace }}"
     api_version: v1
     kind: Namespace

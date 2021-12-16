@@ -25,4 +25,4 @@
         app: nginx
         function: webserver
         info: Demo web server
-  tags: [ never ] 
+  tags: [never]

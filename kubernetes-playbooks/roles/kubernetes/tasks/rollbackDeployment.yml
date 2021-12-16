@@ -1,8 +1,9 @@
 ---
-# tasks file for roles/kubernetes rollbackDeployment 
+# tasks file for roles/kubernetes rollbackDeployment
 - name: Rollback failed deployment "{{ deployment.metadata.name }}" on namespace "{{ deployment.metadata.namespace }}"
-  community.kubernetes.k8s_rollback:
+  kubernetes.core.k8s_rollback:
     api_version: apps/v1
     kind: Deployment
     name: "{{ deployment.metadata.name }}"
+    kubeconfig: "{{ playbook_dir }}/.kube/config"
     namespace: "{{ deployment.metadata.namespace }}"

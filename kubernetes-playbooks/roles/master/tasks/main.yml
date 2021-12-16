@@ -2,7 +2,8 @@
 # tasks file for roles/master main
 - name: Operating System configurations
   ansible.builtin.include_role:
-    name: "{{ kubernetesConfigurations.operatingSystem }}"
+    # name: "{{ kubernetesConfigurations.operatingSystem }}"
+    name: "{{ hostvars[inventory_hostname].ansible_distribution }}"
 
 - name: Launch master node
   ansible.builtin.include_role:
@@ -39,6 +40,6 @@
     tasks_from: joinCommand.yml
 
 - name: Remove extra label from node
-  ansible.builtin.include_role: 
+  ansible.builtin.include_role:
     name: kubernetes
     tasks_from: kubernetesRoleLabels

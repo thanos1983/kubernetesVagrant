@@ -1,0 +1,30 @@
+---
+# tasks file for roles/ubuntu main
+- name: DNS configurations
+  ansible.builtin.include_tasks: dns.yml
+
+- name: Add and update CAs
+  ansible.builtin.include_tasks: installCAs.yml
+
+- name: Add Kubernetes apt signing key
+  ansible.builtin.include_tasks: aptKey.yml
+
+- name: Add Kubernetes apt reposity
+  ansible.builtin.include_tasks: aptRepository.yml
+
+- name: Swapfile processes
+  ansible.builtin.include_role:
+    name: kubernetes
+    tasks_from: swap
+
+- name: Install kubernetes packages for Ubuntu
+  ansible.builtin.include_tasks: installPackages.yml
+
+- name: Apply socket configurations for Ubuntu
+  ansible.builtin.include_role:
+    name: kubernetes
+    tasks_from: socketConfig.yml
+
+- name: Prerequisites for kubernetes
+  ansible.builtin.include_role:
+    name: kubernetes

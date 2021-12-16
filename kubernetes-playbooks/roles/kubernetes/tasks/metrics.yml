@@ -9,7 +9,7 @@
       when: kubernetesConfigurations.socket == "crio"
 
     - name: Deploy cri-o metrics-server
-      community.kubernetes.k8s:
+      kubernetes.core.k8s:
         state: present
         src: cluster.yml
         kubeconfig: "{{ playbook_dir }}/.kube/config"
@@ -33,7 +33,7 @@
         line: "        - --kubelet-insecure-tls"
 
     - name: Install metrics server
-      community.kubernetes.k8s:
+      kubernetes.core.k8s:
         kubeconfig: "{{ playbook_dir }}/.kube/config"
         src: "{{ role_path }}/files/components.yaml"
         state: present

@@ -5,4 +5,4 @@
 
   roles:
     - role: sampleContainerDeployProcess
-      tags: [ sampleContainerDeployProcess ]
+      tags: [sampleContainerDeployProcess]

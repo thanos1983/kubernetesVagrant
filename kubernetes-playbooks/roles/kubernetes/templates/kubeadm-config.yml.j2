@@ -38,7 +38,6 @@ kind: ClusterConfiguration
 kubernetesVersion: {{ kubernetesConfigurations.version.major }}.{{ kubernetesConfigurations.version.minor }}
 networking:
   dnsDomain: cluster.local
-  disableDefaultCNI: true
   podSubnet: {{ kubernetes.networkElement[kubernetesConfigurations.networkElement].range }}
   serviceSubnet: 10.96.0.0/12
 scheduler: {}

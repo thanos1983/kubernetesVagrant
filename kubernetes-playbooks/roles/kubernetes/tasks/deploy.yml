@@ -1,7 +1,7 @@
 ---
 # tasks file for roles/kubernetes deploy
 - name: Pod deployment in Namespace '{{ deployment.metadata.namespace }}'
-  community.kubernetes.k8s:
+  kubernetes.core.k8s:
     state: "{{ deploymentState | default('present') }}"
     kubeconfig: "{{ playbook_dir }}/.kube/config"
     definition:
@@ -19,24 +19,24 @@
       spec: "{{ spec | from_yaml }}"
   vars:
     spec: |
-        replicas: {{ deployment.spec.replicas }}
-        selector:
-          matchLabels:
-            app.kubernetes.io/name: "{{ deployment.spec.selector.matchLabels.name }}"
-            app.kubernetes.io/instance: "{{ deployment.spec.selector.matchLabels.instance }}"
-            app.kubernetes.io/component: "{{ deployment.spec.selector.matchLabels.component }}"
-        revisionHistoryLimit: {{ deployment.spec.revisionHistoryLimit }}
-        minReadySeconds: {{ deployment.spec.minReadySeconds }}
-        template:
-          metadata:
-            labels:
-              app.kubernetes.io/name: "{{ deployment.spec.template.metadata.labels.name }}"
-              app.kubernetes.io/instance: "{{ deployment.spec.template.metadata.labels.instance }}"
-              app.kubernetes.io/component: "{{ deployment.spec.template.metadata.labels.component }}"
-          spec:
-            containers:
-            - name: "{{ deployment.spec.template.spec.containers.name }}"
-              image: "{{ deployment.spec.template.spec.containers.image }}"
-              imagePullPolicy: "{{ deployment.spec.template.spec.containers.imagePullPolicy }}"
-              ports:
-              - containerPort: {{ deployment.spec.template.spec.containers.ports.containerPort }}
+      replicas: {{ deployment.spec.replicas }}
+      selector:
+        matchLabels:
+          app.kubernetes.io/name: "{{ deployment.spec.selector.matchLabels.name }}"
+          app.kubernetes.io/instance: "{{ deployment.spec.selector.matchLabels.instance }}"
+          app.kubernetes.io/component: "{{ deployment.spec.selector.matchLabels.component }}"
+      revisionHistoryLimit: {{ deployment.spec.revisionHistoryLimit }}
+      minReadySeconds: {{ deployment.spec.minReadySeconds }}
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: "{{ deployment.spec.template.metadata.labels.name }}"
+            app.kubernetes.io/instance: "{{ deployment.spec.template.metadata.labels.instance }}"
+            app.kubernetes.io/component: "{{ deployment.spec.template.metadata.labels.component }}"
+        spec:
+          containers:
+          - name: "{{ deployment.spec.template.spec.containers.name }}"
+            image: "{{ deployment.spec.template.spec.containers.image }}"
+            imagePullPolicy: "{{ deployment.spec.template.spec.containers.imagePullPolicy }}"
+            ports:
+            - containerPort: {{ deployment.spec.template.spec.containers.ports.containerPort }}

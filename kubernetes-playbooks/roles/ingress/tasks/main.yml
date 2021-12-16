@@ -31,7 +31,7 @@
         tasks_from: waitForPods
 
     - name: Deploy Ingress Controller
-      community.kubernetes.k8s:
+      kubernetes.core.k8s:
         state: present
         src: "{{ kubernetesConfigurations.ingressController }}.yml"
         kubeconfig: "{{ playbook_dir }}/.kube/config"

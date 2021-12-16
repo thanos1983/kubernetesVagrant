@@ -1,0 +1,7 @@
+---
+# tasks file for roles/ubuntu aptKey
+- name: Add an apt signing key for Kubernetes packages and socket "{{ kubernetesConfigurations.socket }}"
+  ansible.builtin.apt_key:
+    url: "{{ item.url }}"
+    state: "{{ item.state }}"
+  loop: "{{ ubuntu.aptKey[kubernetesConfigurations.socket] }}"
