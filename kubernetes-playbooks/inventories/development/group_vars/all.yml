@@ -38,11 +38,11 @@ vault:
   keysToRetrieve:
     - {
         key: "username",
-        path: "shared/data/all/acr-credentials/maerskao/username:username",
+        path: "shared/data/all/acr-credentials/< acr-name >/username:username",
       }
     - {
         key: "password",
-        path: "shared/data/all/acr-credentials/maerskao/password:password",
+        path: "shared/data/all/acr-credentials/< acr-name >/password:password",
       }
 
 deploy:
